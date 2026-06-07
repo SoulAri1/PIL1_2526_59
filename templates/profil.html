@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profil étudiant</title>
+</head>
+<body>
+
+<h1>Création du profil</h1>
+
+<form action="/valider_profil" method="POST">
+
+    <label>Nom :</label>
+    <input type="text" name="nom"><br><br>
+
+    <label>Prénom :</label>
+    <input type="text" name="prenom"><br><br>
+
+    <label>Filière :</label>
+    <select name="filiere">
+        <option>Licence IA</option>
+        <option>Licence GL</option>
+        <option>Licence SI</option>
+    </select>
+
+    <h3>Compétences</h3>
+
+    <input type="checkbox" name="competences" value="Python">
+    Python
+
+    <input type="checkbox" name="competences" value="SQL">
+    SQL
+
+    <input type="checkbox" name="competences" value="HTML/CSS">
+    HTML/CSS
+
+    <h3>Lacunes</h3>
+
+    <input type="checkbox" name="lacunes" value="Python">
+    Python
+
+    <input type="checkbox" name="lacunes" value="SQL">
+    SQL
+
+    <input type="checkbox" name="lacunes" value="HTML/CSS">
+    HTML/CSS
+
+    <br><br>
+
+    <button type="submit">
+        Enregistrer
+    </button>
+
+</form>
+
+</body>
+</html>
