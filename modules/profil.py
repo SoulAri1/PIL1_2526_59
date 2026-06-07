@@ -1,11 +1,19 @@
 from flask import Blueprint
-profil_bp = Blueprint('profil', __name__)
-# Routes de profil a completer
+profil_bp = Blueprint('profil', __name__)  
+# Routes de profil a completer 
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Simulation de base de données(inserer la base de donnee)
+# Fonction d'aide pour se connecter a la base de donnees
+def connecter_bd():
+    return mysql.connector.connect(
+        host="localhost",       # Souvent localhost en developpement local
+        user="root",            # Ton nom d'utilisateur MySQL
+        password="ton_mot_de_passe",  # Ton mot de passe MySQL
+        database="mentorlink_db"  # Le
+
+# Simulation de base de donnees( la base de donnee)
 profils = []
 
 @app.route('/')
