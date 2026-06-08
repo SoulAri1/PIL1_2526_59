@@ -83,7 +83,7 @@
                                 <td>{{ suivi.filiere }}</td>
                                 <td>{{ suivi.mentor }}</td>
                                 <td>
-                                    {% if suivi.statut == 'Actif' %}
+                                    {% if suivi.statut == 'Actif' or suivi.statut == 'ACTIF' %}
                                         <span class="badge bg-success-subtle text-success">Actif</span>
                                     {% else %}
                                         <span class="badge bg-warning-subtle text-warning">En attente</span>
