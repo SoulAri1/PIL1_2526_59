@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - IFRI MentorLink{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Inscription</h2>
+
+    {% if erreur %}
+    <div class="alert alert-danger">
+        {{ erreur }}
+    </div>
+    {% endif %}
+
+    <form action="/auth/register" method="POST">
+
+        <div class="mb-3">
+            <label>Nom</label>
+            <input type="text" name="nom" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Prénom</label>
+            <input type="text" name="prenom" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Téléphone</label>
+            <input type="text" name="telephone" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Mot de passe</label>
+            <input type="password" name="mot_de_passe" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            S'inscrire
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}
