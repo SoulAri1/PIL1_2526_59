@@ -10,7 +10,6 @@
     .card-stat { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 </style>
 
-
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
@@ -19,14 +18,14 @@
                 <small class="text-white-50">Espace Administration</small>
             </div>
             <hr>
-            <ul class="nav flex-column gap-2">
-                <li class="nav-item"><a class="nav-link active" href="#">📊 Vue générale</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">👨‍🎓 Étudiants</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">🧑‍🏫 Mentors</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">⚙️ Paramètres</a></li>
+            <ul class="nav flex-column gap-2" id="sidebarMenu">
+                <li class="nav-item"><a class="nav-link active" href="#" data-page="vue-generale">📊 Vue générale</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="etudiants">👨‍🎓 Étudiants</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="mentors">🧑‍🏫 Mentors</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="parametres">⚙️ Paramètres</a></li>
             </ul>
             <div class="position-absolute bottom-0 start-0 w-100 p-3 text-center">
-                <a href="/" class="btn btn-sm btn-danger w-75">Déconnexion</a>
+                <a href="/" id="logoutBtn" class="btn btn-sm btn-danger w-75">Déconnexion</a>
             </div>
         </nav>
 
@@ -64,9 +63,13 @@
             </div>
 
             <div class="card card-stat bg-white p-4">
-                <h5 class="fw-bold text-dark mb-3">Suivi Récent des Binômes</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h5 class="fw-bold text-dark mb-0">Suivi Récent des Binômes</h5>
+                    <input type="text" id="tableSearch" class="form-control form-control-sm w-auto" placeholder="🔍 Rechercher un binôme...">
+                </div>
+                
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle" id="suiviTable">
                         <thead class="table-light">
                             <tr>
                                 <th>Étudiant</th>
