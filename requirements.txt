@@ -1,5 +1,5 @@
-flask
-flask-socketio
-psycopg2-binary
-bcrypt
-python-dotenv
+Flask==3.0.2
+Flask-SocketIO==5.3.6
+psycopg2-binary==2.9.12
+eventlet==0.36.1
+python-dotenv==1.0.1
