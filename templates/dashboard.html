@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}IFRI MentorLink - Tableau de Bord{% endblock %}
+
+{% block styles %}
+<style>
+    .sidebar { min-height: 100vh; background-color: #1e3c72; color: white; }
+    .sidebar .nav-link { color: rgba(255,255,255,0.8); transition: all 0.2s; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-radius: 5px; }
+    .card-stat { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
+            <div class="text-center mb-4">
+                <h5 class="fw-bold">IFRI MentorLink</h5>
+                <small class="text-white-50">Espace Administration</small>
+            </div>
+            <hr>
+            <ul class="nav flex-column gap-2">
+                <li class="nav-item"><a class="nav-link active" href="#">📊 Vue générale</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">👨‍🎓 Étudiants</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">🧑‍🏫 Mentors</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">⚙️ Paramètres</a></li>
+            </ul>
+            <div class="position-absolute bottom-0 start-0 w-100 p-3 text-center">
+                <a href="/" class="btn btn-sm btn-danger w-75">Déconnexion</a>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2 text-dark fw-bold">Vue d'ensemble</h1>
+                <span class="badge bg-secondary p-2">Session Universitaire 2026-2027</span>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card card-stat bg-white p-3 border-start border-primary border-4">
+                        <span class="text-muted small uppercase fw-bold">Total Étudiants</span>
+                        <h3 class="fw-bold text-dark mt-1">{{ stats.total_etudiants }}</h3>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card card-stat bg-white p-3 border-start border-success border-4">
+                        <span class="text-muted small uppercase fw-bold">Mentors Actifs</span>
+                        <h3 class="fw-bold text-dark mt-1">{{ stats.total_mentors }}</h3>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card card-stat bg-white p-3 border-start border-warning border-4">
+                        <span class="text-muted small uppercase fw-bold">En Attente</span>
+                        <h3 class="fw-bold text-dark mt-1">{{ stats.demandes_attente }}</h3>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card card-stat bg-white p-3 border-start border-info border-4">
+                        <span class="text-muted small uppercase fw-bold">Taux de Réussite</span>
+                        <h3 class="fw-bold text-dark mt-1">{{ stats.taux_reussite }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-stat bg-white p-4">
+                <h5 class="fw-bold text-dark mb-3">Suivi Récent des Binômes</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Étudiant</th>
+                                <th>Filière</th>
+                                <th>Mentor Assigné</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for suivi in suivis %}
+                            <tr>
+                                <td class="fw-bold text-secondary">{{ suivi.etudiant }}</td>
+                                <td>{{ suivi.filiere }}</td>
+                                <td>{{ suivi.mentor }}</td>
+                                <td>
+                                    {% if suivi.statut == 'Actif' %}
+                                        <span class="badge bg-success-subtle text-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning">En attente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
