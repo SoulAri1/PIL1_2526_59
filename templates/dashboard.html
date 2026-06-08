@@ -2,16 +2,15 @@
 
 {% block title %}IFRI MentorLink - Tableau de Bord{% endblock %}
 
-{% block styles %}
+{% block content %}
 <style>
-    .sidebar { min-height: 100vh; background-color: #1e3c72; color: white; }
+    .sidebar { min-height: 100vh; background-color: #1e3c72; color: white; position: relative }
     .sidebar .nav-link { color: rgba(255,255,255,0.8); transition: all 0.2s; }
     .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-radius: 5px; }
     .card-stat { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 </style>
-{% endblock %}
 
-{% block content %}
+
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
