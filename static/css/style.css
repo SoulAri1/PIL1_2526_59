@@ -1,0 +1,151 @@
+/* ANIMATION DE DÉMARRAGE AVEC LOGO EN GRAND */
+.preloader {
+    position: fixed; /* Plein écran */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%); /* Fond sombre dégradé */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Priorité maximale */
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* Transition douce */
+}
+.preloader.fade-out { opacity: 0; visibility: hidden; } /* Disparition */
+.loader-content { text-align: center; animation: fadeInUp 0.4s ease-out; } /* Animation d'entrée (version 0.4s pour correspondre au CSS externe) */
+
+/* LOGO EN GRAND */
+.loader-logo {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 40px;
+    animation: pulse 1.5s ease-in-out infinite, scaleUp 0.8s cubic-bezier(0.34, 1.2, 0.64, 1) forwards; /* Pulse + zoom */
+}
+@media (min-width: 768px) {
+    .loader-logo { width: 320px; height: 320px; } /* Agrandi sur écrans moyens */
+}
+.loader-logo img { width: 100%; height: 100%; object-fit: contain; } /* Image adaptée */
+
+.loader-title {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 2px; /* Titre sous le logo */
+}
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid #fff;
+    border-right: 4px solid #fff;
+    border-radius: 50%;
+    margin: 20px auto;
+    animation: spin 0.8s ease-in-out infinite; /* Rotation infinie */
+}
+.loader-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin-top: 15px; /* Texte d’attente */
+}
+.loader-progress {
+    width: 200px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin: 20px auto 0;
+    overflow: hidden; /* Barre de progression */
+}
+.loader-progress-bar {
+    height: 100%;
+    background: white;
+    width: 0%;
+    animation: progress 2s ease-out forwards; /* Remplissage animé */
+    border-radius: 3px;
+}
+
+/* KEYFRAMES */
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } /* Rotation */
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } } /* Battement */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } } /* Apparition vers le haut */
+@keyframes progress { 0% { width: 0%; } 30% { width: 45%; } 60% { width: 75%; } 100% { width: 100%; } } /* Progression barre */
+@keyframes scaleUp {
+    0% { transform: scale(0.2); opacity: 0; }
+    80% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; } /* Zoom avant du logo */
+}
+
+/* APPARITION DU CONTENU PRINCIPAL */
+.main-content {
+    opacity: 0;
+    animation: contentFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; /* Apparition après chargement */
+}
+@keyframes contentFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Section avis avec fond animé */
+.avis-section {
+    position: relative;
+    background: linear-gradient(270deg, #1e3c72, #2a5298, #6b4e8e, #1e3c72);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite; /* Dégradé animé */
+    overflow: hidden;
+}
+
+/* Animation du dégradé */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Effet de vagues supplémentaires (optionnel) */
+.avis-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,229.3C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x;
+    background-size: cover;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 1; /* Vague décorative en bas */
+}
+
+/* Ajustement du texte pour qu'il soit lisible sur fond coloré */
+.avis-section h2,
+.avis-section .carousel-control-prev-icon,
+.avis-section .carousel-control-next-icon {
+    color: rgb(255, 255, 255) !important;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5); /* Texte plus lisible */
+}
+
+/* Les cartes restent blanches pour la lisibilité */
+.testimonial-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(2px); /* Fond légèrement transparent */
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important; /* Survol plus prononcé */
+}
+
+/* Indicateurs du carrousel */
+.carousel-indicators button {
+    background-color: white !important;
+    opacity: 0.5;
+}
+.carousel-indicators .active {
+    opacity: 1;
+    background-color: #ffcc00 !important; /* Indicateur actif en jaune */
+}
+
+/* Petite icône pour la section À propos */
+.feature-icon-small {
+    font-size: 1.5rem;
+    line-height: 1;
+}
