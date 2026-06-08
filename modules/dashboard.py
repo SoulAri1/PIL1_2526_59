@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # -*- coding: utf-8 -*-
 """
 IFRI MentorLink - Module Dashboard (Adapté au Schema PostgreSQL)
@@ -9,10 +10,16 @@ from flask import Blueprint, render_template, session, redirect
 from database.connection import get_db_connection
 
 # Création du Blueprint pour le dashboard
+=======
+from flask import Blueprint, render_template, session, redirect, url_for
+from database.connection import get_db_connection
+
+>>>>>>> Stashed changes
 dashboard_bp = Blueprint('dashboard', __name__)
 
 @dashboard_bp.route('/dashboard')
 def dashboard():
+<<<<<<< Updated upstream
     # 1. VOS DONNÉES FICTIVES DE BASE (Sécurité et démo)
     stats_plateforme = {
         "total_etudiants": 142,
@@ -85,3 +92,24 @@ def dashboard():
 
     # Renvoi des données unifiées au template HTML
     return render_template('dashboard.html', stats=stats_plateforme, suivis=recents_suivis)
+=======
+
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return redirect(url_for('auth.login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM utilisateurs WHERE id=%s", (user_id,))
+    user = cursor.fetchone()
+
+    cursor.execute("SELECT * FROM matieres")
+    matieres = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("dashboard.html", user=user, matieres=matieres)
+>>>>>>> Stashed changes

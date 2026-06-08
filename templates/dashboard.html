@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+<<<<<<< Updated upstream
 {% block title %}IFRI MentorLink - Tableau de Bord{% endblock %}
 
 {% block content %}
@@ -100,4 +101,26 @@
         </main>
     </div>
 </div>
+=======
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Dashboard</h2>
+
+    {% if user %}
+        <p>Bienvenue {{ user.prenom }}</p>
+    {% else %}
+        <p>Utilisateur non chargé</p>
+    {% endif %}
+
+    <hr>
+
+    {% for m in matieres %}
+        <p>{{ m.nom }}</p>
+    {% endfor %}
+
+</div>
+
+>>>>>>> Stashed changes
 {% endblock %}
