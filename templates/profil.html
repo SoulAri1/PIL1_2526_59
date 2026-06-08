@@ -1,56 +1,92 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Profil étudiant</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Création du profil</h1>
+{% block title %}IFRI MentorLink - Création du Profil{% endblock %}
 
-<form action="/valider_profil" method="POST">
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+                <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                    <h2 class="h4 fw-bold mb-0">Création du Profil</h2>
+                    <p class="small text-white-50 mb-0 mt-1">Complétez vos informations pour optimiser le mentorat</p>
+                </div>
+                
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form action="/valider_profil" method="POST">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Nom :</label>
+                            <input type="text" name="nom" class="form-control" placeholder="Ex: AGOSSOU" required>
+                        </div>
 
-    <label>Nom :</label>
-    <input type="text" name="nom"><br><br>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Prénom :</label>
+                            <input type="text" name="prenom" class="form-control" placeholder="Ex: Ariel" required>
+                        </div>
 
-    <label>Prénom :</label>
-    <input type="text" name="prenom"><br><br>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Filière :</label>
+                            <select name="filiere" class="form-select" required>
+                                <option value="" disabled selected>Choisissez votre filière...</option>
+                                <option>Licence IA</option>
+                                <option>Licence GL</option>
+                                <option>Licence SI</option>
+                            </select>
+                        </div>
 
-    <label>Filière :</label>
-    <select name="filiere">
-        <option>Licence IA</option>
-        <option>Licence GL</option>
-        <option>Licence SI</option>
-    </select>
+                        <hr class="my-4 text-muted">
 
-    <h3>Compétences</h3>
+                        <div class="mb-4">
+                            <h3 class="h5 fw-bold text-primary mb-3">🛠️ Compétences</h3>
+                            <p class="text-muted small">Cochez les technologies que vous maîtrisez bien :</p>
+                            
+                            <div class="d-flex flex-column gap-2 border rounded p-3 bg-light">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="competences" value="Python" id="compPython">
+                                    <label class="form-check-label" for="compPython">Python</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="competences" value="SQL" id="compSQL">
+                                    <label class="form-check-label" for="compSQL">SQL</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="competences" value="HTML/CSS" id="compHTML">
+                                    <label class="form-check-label" for="compHTML">HTML / CSS</label>
+                                </div>
+                            </div>
+                        </div>
 
-    <input type="checkbox" name="competences" value="Python">
-    Python
+                        <div class="mb-4">
+                            <h3 class="h5 fw-bold text-danger mb-3">🎯 Lacunes</h3>
+                            <p class="text-muted small">Cochez les matières où vous avez besoin d'aide :</p>
+                            
+                            <div class="d-flex flex-column gap-2 border rounded p-3 bg-light">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="lacunes" value="Python" id="lacPython">
+                                    <label class="form-check-label" for="lacPython">Python</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="lacunes" value="SQL" id="lacSQL">
+                                    <label class="form-check-label" for="lacSQL">SQL</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="lacunes" value="HTML/CSS" id="lacHTML">
+                                    <label class="form-check-label" for="lacHTML">HTML / CSS</label>
+                                </div>
+                            </div>
+                        </div>
 
-    <input type="checkbox" name="competences" value="SQL">
-    SQL
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-primary py-2.5 fw-bold rounded-2 shadow-sm" style="background-color: #2a5298; border: none;">
+                                Enregistrer le profil
+                            </button>
+                        </div>
 
-    <input type="checkbox" name="competences" value="HTML/CSS">
-    HTML/CSS
-
-    <h3>Lacunes</h3>
-
-    <input type="checkbox" name="lacunes" value="Python">
-    Python
-
-    <input type="checkbox" name="lacunes" value="SQL">
-    SQL
-
-    <input type="checkbox" name="lacunes" value="HTML/CSS">
-    HTML/CSS
-
-    <br><br>
-
-    <button type="submit">
-        Enregistrer
-    </button>
-
-</form>
-
-</body>
-</html>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
