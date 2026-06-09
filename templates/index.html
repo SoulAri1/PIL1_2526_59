@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil - IFRI MentorLink{% endblock %}
+
+{% block content %}
+<div class="bg-light p-5 rounded shadow-sm my-4 text-center">
+    <h1 class="display-5 fw-bold text-primary">IFRI MentorLink</h1>
+    <p class="lead text-muted fs-4">La plateforme d'entraide et de mentorat entre étudiants.</p>
+    <div class="mt-4">
+        <a href="/matching" class="btn btn-primary btn-lg me-2">Trouver un Mentor</a>
+        <a href="#fonctionnement" class="btn btn-outline-secondary btn-lg">En savoir plus</a>
+    </div>
+</div>
+
+<div class="container my-5" id="fonctionnement">
+    <h2 class="text-center fw-bold mb-4">Comment ça marche ?</h2>
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded bg-white h-100 shadow-xs">
+                <h4 class="text-primary">1. Inscription</h4>
+                <p class="text-muted">Créez votre compte avec votre adresse étudiante de l'IFRI.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded bg-white h-100 shadow-xs">
+                <h4 class="text-primary">2. Matching</h4>
+                <p class="text-muted">Notre algorithme trouve les mentors qui correspondent à vos besoins.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded bg-white h-100 shadow-xs">
+                <h4 class="text-primary">3. Entraide</h4>
+                <p class="text-muted">Discutez et progressez ensemble dans vos matières.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 p-4 border rounded bg-white shadow-sm long-form" id="inscription">
+    <h3 class="text-center fw-bold mb-4">Rejoindre la plateforme</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form>
+                <div class="mb-3">
+                    <label class="form-label">Nom complet</label>
+                    <input type="text" class="form-control" placeholder="Ex: Jérôme Kodjo" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email étudiant</label>
+                    <input type="email" class="form-control" placeholder="Ex: etudiant@ifri.uac.bj" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Créer mon compte</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

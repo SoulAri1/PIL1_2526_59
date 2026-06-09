@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block content %} <div class="container py-4">
+        <h2 class="text-center my-4 fw-bold text-dark">🎯 Vos Suggestions de Mentors</h2>
+        <p class="text-center text-muted mb-5">Mentors triés selon vos besoins, votre filière et vos disponibilités.</p>
+        
+        <div class="row">
+            {% for m in mentors %}
+                <div class="col-md-4 mb-4">
+                    <div class="card p-3 shadow-sm testimonial-card border-0 rounded-3">
+                        <div class="card-body">
+                            
+                            <h4 class="card-title text-primary fw-bold mb-1">{{ m.prenom }} {{ m.nom }}</h4>
+                            <p class="text-muted small">{{ m.filiere }} - {{ m.niveau }}</p>
+                            
+                            <hr>
+                            
+                            <p class="mb-2">
+                                <strong>Score de matching :</strong> 
+                                <span class="text-success fw-bold">{{ m.score }} points</span>
+                            </p>
+                            
+                            <p class="mb-3">
+                                <strong>Matières en commun :</strong><br>
+                                {% for mat in m.communes %}
+                                    <span class="badge bg-info text-dark me-1 mt-1">{{ mat | title }}</span>
+                                {% endfor %}
+                            </p>
+                            
+                            <a href="/chat?id_mentor={{ m.id_user }}" class="btn btn-primary w-100 mt-2">Contacter en direct</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center my-5">
+                    <p class="alert alert-warning py-4">Désolé, aucun mentor disponible ne correspond à vos besoins actuels.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
