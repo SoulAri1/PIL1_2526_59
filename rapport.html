@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Projet IFRI MentorLink - Groupe 59</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3c72 50%, #0d9488 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+        .content {
+            padding: 45px;
+        }
+        h2 {
+            color: #0f172a;
+            border-left: 4px solid #0d9488;
+            padding-left: 18px;
+            margin: 40px 0 25px 0;
+            font-size: 1.6rem;
+        }
+        h3 {
+            color: #1e3c72;
+            margin: 25px 0 15px 0;
+            font-size: 1.2rem;
+        }
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .member-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border-left: 4px solid #0d9488;
+            transition: all 0.2s;
+        }
+        .member-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -10px rgba(0,0,0,0.1);
+        }
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .member-filiere {
+            display: inline-block;
+            background: #0d9488;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+        .member-role {
+            color: #0d9488;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 10px 0 8px 0;
+        }
+        .member-desc {
+            color: #475569;
+            font-size: 0.85rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 18px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-size: 0.75rem;
+            font-family: 'Monaco', monospace;
+            margin: 15px 0;
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #0d9488;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: #e2e8f0;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .step {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-left: 4px solid #0d9488;
+        }
+        .step-number {
+            background: #0d9488;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .info-box {
+            background: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: #dcfce7;
+            border-left-color: #16a34a;
+        }
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+        }
+        .footer-names {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        @media (max-width: 768px) {
+            .content { padding: 25px; }
+            header h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .member-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📚 IFRI MentorLink</h1>
+        <p class="subtitle">Plateforme d'entraide académique — Groupe 59</p>
+        <div class="badge-container">
+            <span class="badge">📅 Année 2025-2026</span>
+            <span class="badge">⏱️ 7 jours</span>
+            <span class="badge">👥 7 membres</span>
+            <span class="badge">🐍 Flask + PostgreSQL</span>
+        </div>
+    </header>
+
+    <div class="content">
+
+        <!-- ==================== 1. MEMBRES ==================== -->
+        <h2>👥 1. Composition du groupe</h2>
+        <p><strong>Nom du groupe :</strong> Groupe 59 — Promotion PIL1 — IFRI / UAC</p>
+        <p><strong>Filières représentées :</strong> Intelligence Artificielle (IA), Génie Logiciel (GL), Sécurité Informatique (SI), Systèmes Embarqués & IoT (SE&IoT)</p>
+
+        <div class="member-grid">
+            <div class="member-card">
+                <div><span class="member-name">AGOSSOU Ariel Gracias</span><span class="member-filiere">IA</span></div>
+                <div class="member-role"><i class="fas fa-crown"></i> Intégrateur Principal / Chef de projet</div>
+                <div class="member-desc">Refactorisation complète, messagerie temps réel (polling), dashboard, menu rétractable, documentation, déploiement, versionnement Git.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">MEHINTO Miclette</span><span class="member-filiere">SI</span></div>
+                <div class="member-role"><i class="fas fa-lock"></i> Authentification & Sécurité</div>
+                <div class="member-desc">Inscription, connexion, déconnexion, sessions, hachage des mots de passe, mot de passe oublié, protection des routes.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">MENSAH Eliel Othny</span><span class="member-filiere">GL</span></div>
+                <div class="member-role"><i class="fas fa-id-card"></i> Gestion des profils</div>
+                <div class="member-desc">Formulaire de profil, compétences/lacunes, validation des données, upload photo, bio, centres d'intérêt, 40+ matières.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">DJIKPESSE Théoson Moralèce Mawutin</span><span class="member-filiere">GL</span></div>
+                <div class="member-role"><i class="fas fa-database"></i> Base de données</div>
+                <div class="member-desc">Modélisation SQL, schéma relationnel, seed données, connexion Supabase (connection.py), gestion erreurs, timeouts.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">HOUNHOWAKOU Prince Freddy</span><span class="member-filiere">IA</span></div>
+                <div class="member-role"><i class="fas fa-palette"></i> Design UI / UX</div>
+                <div class="member-desc">Charte graphique, CSS, animations, responsive design, maquettes, intégration Bootstrap, expérience utilisateur.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">KPOMALEGNI Josias Précieux Bidossessi</span><span class="member-filiere">SI</span></div>
+                <div class="member-role"><i class="fas fa-brain"></i> Algorithme de matching</div>
+                <div class="member-desc">Scoring en pourcentage, compatibilité mentor/mentoré, suggestions intelligentes, optimisation du matching.</div>
+            </div>
+            <div class="member-card">
+                <div><span class="member-name">AIZAN Yves Lauriano</span><span class="member-filiere">SE&IoT</span></div>
+                <div class="member-role"><i class="fas fa-comments"></i> Messagerie initiale</div>
+                <div class="member-desc">Architecture chat, affichage conversations, structure HTML/CSS messagerie, interface utilisateur, notifications.</div>
+            </div>
+        </div>
+
+        <table>
+            <thead><tr><th>#</th><th>Nom et prénom</th><th>Filière</th><th>Rôle</th></tr></thead>
+            <tbody>
+                <tr><td>Membre 1</td><td>AGOSSOU Ariel Gracias</td><td>IA</td><td>Intégrateur Principal</td></tr>
+                <tr><td>Membre 2</td><td>MEHINTO Miclette</td><td>SI</td><td>Authentification</td></tr>
+                <tr><td>Membre 3</td><td>MENSAH Eliel Othny</td><td>GL</td><td>Gestion des profils</td></tr>
+                <tr><td>Membre 4</td><td>DJIKPESSE Théoson Moralèce Mawutin</td><td>GL</td><td>Base de données</td></tr>
+                <tr><td>Membre 5</td><td>HOUNHOWAKOU Prince Freddy</td><td>IA</td><td>Design UI/UX</td></tr>
+                <tr><td>Membre 6</td><td>KPOMALEGNI Josias Précieux Bidossessi</td><td>SI</td><td>Algorithme matching</td></tr>
+                <tr><td>Membre 7</td><td>AIZAN Yves Lauriano</td><td>SE&IoT</td><td>Messagerie initiale</td></tr>
+            </tbody>
+        </table>
+
+        <!-- Dépôt GitHub et accès encadrants -->
+        <div class="info-box" style="margin-top: 25px;">
+            <i class="fab fa-github"></i> <strong>Dépôt GitHub :</strong><br>
+            <code>https://github.com/SoulAri1/PIL1_2526_59.git</code>
+            <br><br>
+            <i class="fas fa-users"></i> <strong>Accès encadrants :</strong><br>
+            Les comptes GitHub suivants ont été ajoutés comme collaborateurs :<br>
+            <code>ratheilesse</code> · <code>primearwyn</code> · <code>MaryseGAHOU</code>
+            <br><br>
+            <i class="fas fa-check-circle"></i> Conformité avec le cahier des charges : dépôt nommé <code>PIL1_2526_59</code>.
+        </div>
+
+        <!-- ==================== 2. FONCTIONNEMENT ==================== -->
+        <h2>⚙️ 2. Mode de fonctionnement interne</h2>
+        <p>Développement sur <strong>7 jours</strong> selon une méthodologie agile. Utilisation de <strong>Git</strong> pour le versionnement et répartition des tâches.</p>
+
+        <div class="step"><span class="step-number">1</span> <strong>Jours 1-2 :</strong> Analyse et conception — maquettage UI (Membre 5), modélisation BD (Membre 4)</div>
+        <div class="step"><span class="step-number">2</span> <strong>Jours 3-4 :</strong> Développement des modules — auth (Membre 2), profil (Membre 3), matching (Membre 6), messagerie (Membre 7)</div>
+        <div class="step"><span class="step-number">3</span> <strong>Jour 5 :</strong> Intégration — assemblage des modules, correction des conflits (Membre 1)</div>
+        <div class="step"><span class="step-number">4</span> <strong>Jour 6 :</strong> Refactorisation — matching en pourcentage (Membre 6), polling (Membre 1), toggles profil (Membre 3), menu rétractable (Membre 1)</div>
+        <div class="step"><span class="step-number">5</span> <strong>Jour 7 :</strong> Documentation — README, rapport HTML, livraison finale</div>
+
+        <div class="info-box">
+            <i class="fas fa-github"></i> <strong>Collaboration :</strong> GitHub avec commits réguliers. Accès donné aux encadrants.
+        </div>
+
+        <!-- ==================== 3. CONCEPTION ==================== -->
+        <h2>🏗️ 3. Description de la conception</h2>
+
+        <h3>📁 Structure du projet (Architecture MVC)</h3>
+        <pre>
+Ariel/
+├── app.py                      # Point d'entrée Flask
+├── requirements.txt            # Dépendances Python
+├── README.md                   # Documentation
+├── rapport.html                # Ce fichier
+│
+├── modules/                    # Backend - Blueprints (Contrôleur)
+│   ├── auth.py                 # Authentification
+│   ├── profil.py               # Gestion des profils
+│   ├── matching.py             # Algorithme de matching
+│   ├── messagerie.py           # API messagerie
+│   ├── annonces.py             # Module annonces
+│   └── dashboard.py            # Tableau de bord
+│
+├── templates/                  # Frontend - Vues Jinja2 (Vue)
+│   ├── base.html               # Layout parent
+│   ├── index.html              # Page d'accueil
+│   ├── login.html              # Connexion
+│   ├── register.html           # Inscription
+│   ├── profil.html             # Formulaire profil
+│   ├── matching.html           # Résultats matching
+│   ├── chat.html               # Messagerie
+│   ├── dashboard.html          # Tableau de bord
+│   └── annonces.html           # Annonces
+│
+├── static/                     # Assets
+│   ├── css/style.css           # Styles
+│   ├── js/                     # JavaScript
+│   ├── img/                    # Images
+│   └── uploads/                # Photos de profil (dossier existant)
+│
+└── database/                   # Base de données (Modèle)
+    ├── connection.py           # Connexion Supabase
+    ├── schema.sql              # Structure SQL
+    └── seed.sql                # Données de test
+        </pre>
+
+        <h3>🗄️ Base de données (PostgreSQL / Supabase)</h3>
+        <p>Modèle relationnel avec 6 tables principales :</p>
+        <ul style="margin-left: 25px;">
+            <li><code>utilisateurs</code> – comptes et profils (nom, email, mot de passe hashé, bio, centres_intérêt, photo_profil, reset_token)</li>
+            <li><code>matieres</code> – 40+ matières informatiques</li>
+            <li><code>competences_mentor</code> – matières maîtrisées</li>
+            <li><code>lacunes_mentore</code> – matières à renforcer</li>
+            <li><code>annonces</code> – offres/demandes de mentorat</li>
+            <li><code>messages</code> – messagerie instantanée</li>
+        </ul>
+        <p>✅ Le fichier <code>database/schema.sql</code> contient la structure complète de la base de données.</p>
+
+        <h3>🛠️ Stack technique</h3>
+        <div class="tech-stack">
+            <span class="tech-item">🐍 Python 3.10+</span>
+            <span class="tech-item">⚡ Flask 3.0</span>
+            <span class="tech-item">🗄️ PostgreSQL (Supabase)</span>
+            <span class="tech-item">🎨 Bootstrap 5</span>
+            <span class="tech-item">📜 Jinja2</span>
+            <span class="tech-item">🟨 JavaScript natif</span>
+            <span class="tech-item">🔐 Werkzeug</span>
+        </div>
+        <div class="success-box info-box">
+            <i class="fas fa-check-circle"></i> <strong>Conformité au cahier des charges :</strong> aucune technologie interdite (Java serveur, PHP, Node.js, Ruby on Rails) n'a été utilisée.
+        </div>
+
+        <!-- ==================== 4. INSTRUCTIONS DE DÉPLOIEMENT ==================== -->
+        <h2>🚀 4. Instructions de déploiement</h2>
+
+        <div class="step"><span class="step-number">1</span> <strong>Prérequis :</strong> Python 3.10+, Git</div>
+        <div class="step"><span class="step-number">2</span> <strong>Cloner le dépôt :</strong> <code>git clone https://github.com/SoulAri1/PIL1_2526_59.git</code></div>
+        <div class="step"><span class="step-number">3</span> <strong>Créer l'environnement virtuel :</strong>
+            <pre>cd PIL1_2526_59
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux</pre>
+        </div>
+        <div class="step"><span class="step-number">4</span> <strong>Installer les dépendances :</strong> <code>pip install -r requirements.txt</code></div>
+        <div class="step"><span class="step-number">5</span> <strong>Lancer l'application :</strong> <code>python app.py</code></div>
+        <div class="step"><span class="step-number">6</span> <strong>Accéder à l'application :</strong> <code>http://127.0.0.1:5000</code></div>
+
+        <div class="info-box">
+            <i class="fas fa-folder-open"></i> <strong>Note :</strong> Le dossier <code>static/uploads/</code> pour les photos de profil est déjà créé et prêt à l'emploi.
+        </div>
+
+        <h3>🔐 Comptes de test</h3>
+        <table>
+            <thead><tr><th>Email</th><th>Mot de passe</th><th>Rôle</th></tr></thead>
+            <tbody>
+                <tr><td>amadou.diallo@ifri-uac.bj</td><td>password123</td><td>Mentor (IA)</td></tr>
+                <tr><td>fatou.kouma@ifri-uac.bj</td><td>password123</td><td>Mentor (GL)</td></tr>
+                <tr><td>benoit.houndji@ifri-uac.bj</td><td>password123</td><td>Mentoré (IA)</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ==================== 5. MANUEL D'UTILISATION ==================== -->
+        <h2>📖 5. Manuel d'utilisation</h2>
+
+        <div class="step"><span class="step-number">🔐</span> <strong>Authentification</strong> — Inscription (nom, prénom, email, téléphone, mot de passe, filière, compétences, lacunes). Connexion sécurisée. Mot de passe oublié avec lien de réinitialisation.</div>
+        <div class="step"><span class="step-number">👤</span> <strong>Profil utilisateur</strong> — Bio, centres d'intérêt, upload photo de profil. 40+ matières disponibles. Ajout de matières personnalisées. Masquage/affichage des sections compétences/lacunes.</div>
+        <div class="step"><span class="step-number">🎯</span> <strong>Matching</strong> — Sélection du mode Mentor ou Mentoré. Compatibilité affichée en pourcentage (0-100%). Clic sur "Contacter" pour envoyer une demande avec message optionnel.</div>
+        <div class="step"><span class="step-number">💬</span> <strong>Messagerie</strong> — Conversations à gauche, chat à droite. Envoi par Entrée ou clic. Messages instantanés (polling 3s). Notifications navigateur à la réception.</div>
+        <div class="step"><span class="step-number">📢</span> <strong>Annonces</strong> — Publication d'offres ou demandes de mentorat. Réponse aux annonces. Suppression de ses propres annonces.</div>
+        <div class="step"><span class="step-number">📊</span> <strong>Dashboard</strong> — Menu latéral rétractable. Cartes statistiques animées. Recherche en temps réel dans le tableau des binômes.</div>
+
+        <!-- ==================== 6. ALGORITHME ==================== -->
+        <h2>🧮 6. Algorithme de matching</h2>
+        <table>
+            <thead><tr><th>Critère</th><th>Calcul</th><th>Points max</th></tr></thead>
+            <tbody>
+                <tr><td>📚 Matières communes</td><td>3 points par matière (max 20 matières)</td><td>60</td></tr>
+                <tr><td>🏫 Même filière</td><td>20 points si filière identique</td><td>20</td></tr>
+                <tr><td>📖 Même niveau</td><td>10 points si niveau identique</td><td>10</td></tr>
+                <tr><td>⏰ Disponibilités communes</td><td>1 point par créneau (max 10)</td><td>10</td></tr>
+                <tr style="background:#f1f5f9;"><td><strong>Total</strong></td><td></td><td><strong>100 points = 100%</strong></td></tr>
+            </tbody>
+        </table>
+        <div class="info-box">
+            <i class="fas fa-calculator"></i> <strong>Exemple :</strong> 4 matières communes (12 pts) + même filière (20 pts) + même niveau (10 pts) + 3 créneaux (3 pts) = 45 pts → <strong>Compatibilité : 45%</strong>
+        </div>
+
+        <!-- ==================== 7. ÉTAT ==================== -->
+        <h2>✅ 7. État du projet</h2>
+        <table>
+            <thead><tr><th>Module</th><th>Statut</th><th>Responsable</th></tr></thead>
+            <tbody>
+                <tr><td>Authentification</td><td>✅ 100%</td><td>Membre 2</td></tr>
+                <tr><td>Profil utilisateur</td><td>✅ 100%</td><td>Membre 3</td></tr>
+                <tr><td>Matching (pourcentage)</td><td>✅ 100%</td><td>Membre 6</td></tr>
+                <tr><td>Messagerie (polling + notifications)</td><td>✅ 100%</td><td>Membre 1 & 7</td></tr>
+                <tr><td>Dashboard (menu rétractable)</td><td>✅ 100%</td><td>Membre 1</td></tr>
+                <tr><td>Annonces (offres/demandes)</td><td>✅ 100%</td><td>Membre 1</td></tr>
+                <tr><td>Base de données</td><td>✅ 100%</td><td>Membre 4</td></tr>
+                <tr><td>Design UI</td><td>✅ 100%</td><td>Membre 5</td></tr>
+                <tr><td>Documentation</td><td>✅ 100%</td><td>Membre 1</td></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <footer>
+        <p>© 2025-2026 IFRI MentorLink — Groupe 59 — Projet réalisé en 7 jours</p>
+        <p>Institut de Formation et de Recherche en Informatique (IFRI / Université d'Abomey-Calavi)</p>
+        <div class="footer-names">
+            AGOSSOU Ariel Gracias • MEHINTO Miclette • MENSAH Eliel Othny • DJIKPESSE Théoson Moralèce Mawutin • HOUNHOWAKOU Prince Freddy • KPOMALEGNI Josias Précieux Bidossessi • AIZAN Yves Lauriano
+        </div>
+    </footer>
+</div>
+</body>
+</html>
