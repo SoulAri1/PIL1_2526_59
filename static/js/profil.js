@@ -1,6 +1,5 @@
 /**
  * IFRI MentorLink - Profil dynamique (Version stable)
- * Boutons Masquer/Voir + Ajout de matière personnalisée
  */
 
 document.addEventListener('DOMContentLoaded', function() {

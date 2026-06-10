@@ -9,106 +9,111 @@
 {% block main_content_class %}no-preloader{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Bouton toggle pour menu latéral -->
-        <div class="position-fixed top-50 start-0 translate-middle-y ms-2" style="z-index: 1060;">
-            <button id="toggleSidebar" class="btn btn-secondary rounded-circle shadow-lg" style="width: 45px; height: 45px;">
-                <i class="bi bi-arrow-left-circle-fill fs-4"></i>
-            </button>
-        </div>
-
-        <!-- Sidebar rétractable -->
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-4" style="transition: transform 0.3s ease;">
-            <div class="text-center mb-4 pt-2">
-                <a href="{{ url_for('index') }}" class="text-decoration-none">
-                    <img src="{{ url_for('static', filename='img/IFRI MentorLink.png') }}" alt="Logo" class="logo-img sidebar-logo mb-3">
-                </a>
-                <h5 class="fw-bold tracking-tight text-white mb-1">IFRI MentorLink</h5>
-                <span class="badge px-2 py-1 rounded-pill" style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);">Espace Administration</span>
+<div class="dashboard-container">
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar intégrée - ne recouvre pas la page par défaut -->
+        <aside class="dashboard-sidebar" id="dashboardSidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">
+                     <i class="bi bi-mortarboard-fill" style="font-size: 32px; color: #0d9488;"></i>
+                </div>
+                <div class="brand-name">
+                    <span class="brand-main">IFRI</span>
+                    <span class="brand-sub">MentorLink</span>
+                </div>
             </div>
-            <hr class="text-white-50 opacity-25">
-            <ul class="nav flex-column gap-2" id="sidebarMenu">
-                <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard.dashboard') }}" data-page="vue-generale"><i class="bi bi-grid-1x2-fill me-2"></i>Vue générale</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('matching.faire_le_matching') }}" data-page="matching"><i class="bi bi-people-fill me-2"></i>Matching</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('profil.accueil') }}" data-page="profil"><i class="bi bi-person-badge me-2"></i>Mon profil</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('messagerie.liste_conversations') }}" data-page="messagerie"><i class="bi bi-chat-dots-fill me-2"></i>Messages</a></li>
-            </ul>
-            <div class="position-absolute bottom-0 start-0 w-100 p-4 text-center">
-                <a href="{{ url_for('auth.logout') }}" id="logoutBtn" class="btn btn-logout w-100 py-2 fw-semibold">
-                    <i class="bi bi-box-arrow-left me-2"></i>Déconnexion
+            
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span class="nav-label">Vue générale</span>
+                </a>
+                <a href="{{ url_for('matching.faire_le_matching') }}" class="nav-link">
+                    <i class="bi bi-people-fill"></i>
+                    <span class="nav-label">Matching</span>
+                </a>
+                <a href="{{ url_for('profil.accueil') }}" class="nav-link">
+                    <i class="bi bi-person-badge-fill"></i>
+                    <span class="nav-label">Mon profil</span>
+                </a>
+                <a href="{{ url_for('messagerie.liste_conversations') }}" class="nav-link">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <span class="nav-label">Messages</span>
+                </a>
+                <a href="{{ url_for('annonces_module.index') }}" class="nav-link">
+                    <i class="bi bi-megaphone-fill"></i>
+                    <span class="nav-label">Annonces</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="{{ url_for('auth.logout') }}" class="nav-link logout-link" id="logoutBtn">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span class="nav-label">Déconnexion</span>
                 </a>
             </div>
-        </nav>
+        </aside>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5 py-5 bg-smooth">
-            <div class="d-flex justify-content-between align-items-center flex-wrap pt-3 pb-3 mb-4 border-bottom-smooth reveal">
+        <!-- Contenu principal -->
+        <main class="dashboard-main">
+            <div class="page-header">
                 <div>
-                    <h1 class="h2 text-dark-smooth fw-bold tracking-tight mb-1">Vue d'ensemble</h1>
-                    <p class="text-muted small mb-0">Pilotez l'attribution et le suivi des mentors de l'institut.</p>
+                    <h1 class="page-title">Vue d'ensemble</h1>
+                    <p class="page-subtitle">Pilotez l'attribution et le suivi des mentors de l'institut.</p>
                 </div>
-                <span class="badge badge-premium px-3 py-2 rounded-pill">Session Universitaire 2026-2027</span>
+                <span class="session-badge">Session Universitaire 2026-2027</span>
             </div>
 
-            <div class="row g-4 mb-5">
-                <div class="col-12 col-sm-6 col-lg-3 reveal reveal-delay-1">
-                    <div class="card card-stat p-4 border-start-custom border-primary-custom" style="background: linear-gradient(145deg, #ffffff 0%, #eff6ff 100%);">
-                        <span class="text-muted-smooth small text-uppercase fw-bold">Total Étudiants</span>
-                        <h2 class="fw-bold text-dark-smooth mt-2 mb-0 stat-counter" data-target="{{ stats.total_etudiants }}">0</h2>
-                    </div>
+            <!-- Cartes statistiques -->
+            <div class="stats-grid">
+                <div class="stat-card stat-primary">
+                    <span class="stat-label">Total Étudiants</span>
+                    <h2 class="stat-value stat-counter" data-target="{{ stats.total_etudiants }}">0</h2>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3 reveal reveal-delay-2">
-                    <div class="card card-stat p-4 border-start-custom border-success-custom" style="background: linear-gradient(145deg, #ffffff 0%, #ecfdf5 100%);">
-                        <span class="text-muted-smooth small text-uppercase fw-bold">Mentors Actifs</span>
-                        <h2 class="fw-bold text-dark-smooth mt-2 mb-0 stat-counter" data-target="{{ stats.total_mentors }}">0</h2>
-                    </div>
+                <div class="stat-card stat-success">
+                    <span class="stat-label">Mentors Actifs</span>
+                    <h2 class="stat-value stat-counter" data-target="{{ stats.total_mentors }}">0</h2>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3 reveal reveal-delay-3">
-                    <div class="card card-stat p-4 border-start-custom border-warning-custom" style="background: linear-gradient(145deg, #ffffff 0%, #fffbeb 100%);">
-                        <span class="text-muted-smooth small text-uppercase fw-bold">En Attente</span>
-                        <h2 class="fw-bold text-dark-smooth mt-2 mb-0 stat-counter" data-target="{{ stats.demandes_attente }}">0</h2>
-                    </div>
+                <div class="stat-card stat-warning">
+                    <span class="stat-label">En Attente</span>
+                    <h2 class="stat-value stat-counter" data-target="{{ stats.demandes_attente }}">0</h2>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3 reveal">
-                    <div class="card card-stat p-4 border-start-custom border-info-custom" style="background: linear-gradient(145deg, #ffffff 0%, #ecfeff 100%);">
-                        <span class="text-muted-smooth small text-uppercase fw-bold">Taux de Réussite</span>
-                        <h2 class="fw-bold text-dark-smooth mt-2 mb-0">{{ stats.taux_reussite }}</h2>
-                    </div>
+                <div class="stat-card stat-info">
+                    <span class="stat-label">Taux de Réussite</span>
+                    <h2 class="stat-value stat-counter" data-target="85">0<span class="percent">%</span></h2>
                 </div>
             </div>
 
-            <div class="card card-container-table p-4 p-md-5 reveal">
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <!-- Tableau des binômes -->
+            <div class="table-container">
+                <div class="table-header">
                     <div>
-                        <h5 class="fw-bold text-dark-smooth mb-1">Suivi Récent des Binômes</h5>
-                        <p class="text-muted small mb-0">Liste temps réel synchronisée avec la base de données</p>
+                        <h5 class="table-title">Suivi Récent des Binômes</h5>
+                        <p class="table-subtitle">Liste temps réel synchronisée avec la base de données</p>
                     </div>
-                    <div class="search-input-wrapper">
-                        <input type="text" id="tableSearch" class="form-control custom-search-input" placeholder="Rechercher un binôme...">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" id="tableSearch" class="search-input" placeholder="Rechercher un binôme...">
                     </div>
                 </div>
 
-                <div class="table-responsive rounded-4 shadow-sm border">
-                    <table class="table custom-table align-middle mb-0" id="suiviTable">
+                <div class="table-responsive">
+                    <table class="data-table" id="suiviTable">
                         <thead>
-                            <tr>
-                                <th>Étudiant</th>
-                                <th>Filière</th>
-                                <th>Mentor Assigné</th>
-                                <th>Statut</th>
-                            </tr>
+                            <tr><th>Étudiant</th><th>Filière</th><th>Mentor Assigné</th><th>Statut</th></tr>
                         </thead>
                         <tbody>
                             {% for suivi in suivis %}
                             <tr>
-                                <td class="fw-semibold text-dark-smooth">{{ suivi.etudiant }}</td>
-                                <td><span class="badge bg-light text-secondary border px-2 py-1 rounded">{{ suivi.filiere }}</span></td>
-                                <td class="text-muted-smooth fw-medium">{{ suivi.mentor }}</td>
+                                <td class="fw-semibold">{{ suivi.etudiant }}</td>
+                                <td><span class="filiere-badge">{{ suivi.filiere }}</span></td>
+                                <td>{{ suivi.mentor }}</td>
                                 <td>
                                     {% if suivi.statut == 'Actif' or suivi.statut == 'ACTIF' %}
-                                        <span class="badge-status badge-status-active">● Actif</span>
+                                        <span class="status-badge status-active">● Actif</span>
                                     {% else %}
-                                        <span class="badge-status badge-status-pending">● En attente</span>
+                                        <span class="status-badge status-pending">● En attente</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -120,6 +125,373 @@
         </main>
     </div>
 </div>
+
+<style>
+/* ===== CONTENEUR PRINCIPAL ===== */
+.dashboard-container {
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+}
+
+.dashboard-wrapper {
+    display: flex;
+    gap: 0;
+    min-height: 100%;
+}
+
+/* ===== SIDEBAR INTÉGRÉE ===== */
+.dashboard-sidebar {
+    width: 80px;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 100;
+}
+
+/* Au survol, la sidebar s'étend */
+.dashboard-sidebar:hover {
+    width: 260px;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+}
+
+/* ===== HEADER SIDEBAR ===== */
+.sidebar-header {
+    padding: 20px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-circle {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-sidebar:hover .logo-circle {
+    width: 60px;
+    height: 60px;
+}
+
+.sidebar-logo {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+.dashboard-sidebar:hover .sidebar-logo {
+    width: 45px;
+    height: 45px;
+}
+
+.brand-name {
+    text-align: center;
+}
+
+.brand-main {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    display: block;
+    letter-spacing: -0.5px;
+}
+
+.brand-sub {
+    font-size: 0.65rem;
+    color: #5eead4;
+    letter-spacing: 1px;
+}
+
+.dashboard-sidebar:not(:hover) .brand-main,
+.dashboard-sidebar:not(:hover) .brand-sub {
+    font-size: 0.7rem;
+}
+
+/* ===== NAVIGATION ===== */
+.sidebar-nav {
+    flex: 1;
+    padding: 0 12px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    margin: 4px 0;
+    border-radius: 10px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.nav-link i {
+    font-size: 1.2rem;
+    min-width: 28px;
+    text-align: center;
+}
+
+.nav-label {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.dashboard-sidebar:hover .nav-label {
+    opacity: 1;
+}
+
+.nav-link:hover {
+    background: rgba(13,148,136,0.2);
+    color: #5eead4;
+    transform: translateX(4px);
+}
+
+.nav-link.active {
+    background: linear-gradient(90deg, rgba(13,148,136,0.3), transparent);
+    color: #5eead4;
+    border-left: 3px solid #0d9488;
+}
+
+.logout-link {
+    margin-top: 20px;
+    color: #f87171;
+}
+
+.logout-link:hover {
+    background: rgba(239,68,68,0.2);
+    color: #ff8a8a;
+}
+
+/* ===== SIDEBAR FOOTER ===== */
+.sidebar-footer {
+    padding: 20px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: auto;
+}
+
+/* ===== CONTENU PRINCIPAL ===== */
+.dashboard-main {
+    flex: 1;
+    padding: 25px 35px;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.session-badge {
+    background: #1e3c72;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===== GRILLE STATISTIQUES ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.1);
+}
+
+.stat-primary { border-left-color: #3b82f6; background: linear-gradient(145deg, #fff, #eff6ff); }
+.stat-success { border-left-color: #10b981; background: linear-gradient(145deg, #fff, #ecfdf5); }
+.stat-warning { border-left-color: #f59e0b; background: linear-gradient(145deg, #fff, #fffbeb); }
+.stat-info { border-left-color: #06b6d4; background: linear-gradient(145deg, #fff, #ecfeff); }
+
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748b;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 8px;
+}
+
+.percent {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* ===== TABLEAU ===== */
+.table-container {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.table-title {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.table-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-input {
+    padding: 8px 12px 8px 35px;
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    width: 220px;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #0d9488;
+    width: 260px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 12px 8px;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+}
+
+.filiere-badge {
+    background: #e2e8f0;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-pending {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        width: 60px;
+    }
+    .dashboard-sidebar:hover {
+        width: 220px;
+    }
+    .dashboard-main {
+        padding: 15px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-input {
+        width: 180px;
+    }
+}
+</style>
 {% endblock %}
 
 {% block extra_scripts %}

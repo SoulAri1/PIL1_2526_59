@@ -1,6 +1,5 @@
 /**
  * IFRI MentorLink — Moteur d'interactions front-end
- * Centralisez ici tous les effets JS pour faciliter l'intégration équipe.
  */
 document.addEventListener('DOMContentLoaded', function () {
     initPreloader();
