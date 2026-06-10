@@ -1,0 +1,464 @@
+
+<!-- saved from url=(0173)file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/chat.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>{% extends 'base.html' %}
+
+{% block title %}Messagerie — {{ destinataire.prenom }} {{ destinataire.nom }} — IFRI MentorLink{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --ml-primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --ml-dark-blue: #1e3c72;
+    --ml-brand-blue: #2a5298;
+    --ml-light-bg: #f4f7fe;
+    --ml-surface-white: #ffffff;
+    --ml-border-color: #e2eaf4;
+    --ml-text-dark: #1a202c;
+    --ml-text-muted: #8a99ad;
+    --ml-bubble-me: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+    --ml-bubble-other: #ffffff;
+    --ml-radius-lg: 20px;
+    --ml-radius-md: 14px;
+    --ml-shadow-md: 0 10px 30px rgba(30, 60, 114, 0.08);
+}
+
+.chat-workspace {
+    min-height: calc(100vh - 140px);
+    padding: 20px 0;
+    background: linear-gradient(180deg, #f0f4ff 0%, #f8f9fa 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.chat-window-card {
+    background: var(--ml-surface-white);
+    border-radius: var(--ml-radius-lg);
+    box-shadow: var(--ml-shadow-md);
+    border: 1px solid var(--ml-border-color);
+    display: flex;
+    height: 78vh;
+    min-height: 550px;
+    overflow: hidden;
+}
+
+.chat-sidebar {
+    width: 320px;
+    border-right: 1px solid var(--ml-border-color);
+    display: flex;
+    flex-direction: column;
+    background: var(--ml-surface-white);
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--ml-border-color);
+    background: var(--ml-surface-white);
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ml-dark-blue);
+    margin: 0;
+}
+
+.conversations-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.conversation-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--ml-radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 6px;
+    border: 1px solid transparent;
+}
+
+.conversation-item:hover {
+    background-color: var(--ml-light-bg);
+    transform: translateY(-1px);
+}
+
+.conversation-item.active {
+    background: var(--ml-light-bg);
+    border-color: rgba(42, 82, 152, 0.15);
+}
+
+.sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+}
+
+.conversation-item.active .sidebar-avatar {
+    border-color: var(--ml-brand-blue);
+}
+
+.conv-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.conv-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--ml-text-dark);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conv-preview {
+    font-size: 0.8rem;
+    color: var(--ml-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fdfefe;
+}
+
+.active-chat-header {
+    padding: 16px 24px;
+    background: var(--ml-surface-white);
+    border-bottom: 1px solid var(--ml-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.header-user-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.active-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.04);
+}
+
+.active-status-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 2px white;
+    animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.chat-body-stream {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+
+.date-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--ml-text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin: 14px 0;
+}
+.date-divider::before, .date-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--ml-border-color);
+}
+.date-divider:not(:empty)::before { margin-right: .5em; }
+.date-divider:not(:empty)::after { margin-left: .5em; }
+
+.msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    max-width: 75%;
+    animation: msgReveal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes msgReveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-row.sent {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.msg-row.received {
+    margin-right: auto;
+}
+
+.msg-mini-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.msg-bubble {
+    padding: 12px 18px;
+    border-radius: var(--ml-radius-md);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    position: relative;
+    word-break: break-word;
+    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.04);
+}
+
+.msg-row.sent .msg-bubble {
+    background: var(--ml-bubble-me);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.msg-row.received .msg-bubble {
+    background: var(--ml-bubble-other);
+    color: var(--ml-text-dark);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--ml-border-color);
+}
+
+.msg-timestamp {
+    font-size: 0.68rem;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+    opacity: 0.7;
+}
+
+.chat-interactive-footer {
+    padding: 16px 24px;
+    background: var(--ml-surface-white);
+    border-top: 1px solid var(--ml-border-color);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    background: #f8fafc;
+    border: 1.5px solid var(--ml-border-color);
+    border-radius: 24px;
+    padding: 6px 6px 6px 16px;
+    transition: all 0.2s ease;
+}
+
+.chat-input-wrapper:focus-within {
+    border-color: var(--ml-brand-blue);
+    background: var(--ml-surface-white);
+    box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+}
+
+.rich-textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 0;
+    max-height: 100px;
+    resize: none;
+    outline: none;
+    font-size: 0.92rem;
+    color: var(--ml-text-dark);
+    line-height: 1.4;
+}
+
+.btn-send-message {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ml-primary-gradient);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(30, 60, 114, 0.2);
+}
+
+.btn-send-message:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(30, 60, 114, 0.3);
+}
+
+.empty-stream-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--ml-text-muted);
+    text-align: center;
+    padding: 40px;
+}
+
+.empty-stream-icon {
+    font-size: 2.5rem;
+    background: var(--ml-light-bg);
+    color: var(--ml-brand-blue);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+    .chat-sidebar { display: none; }
+    .chat-window-card { height: 82vh; }
+    .msg-row { max-width: 88%; }
+}
+</style>
+
+<div class="chat-workspace">
+    <div class="container">
+        <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;dashboard.dashboard&#39;)%20%7D%7D" class="btn btn-link text-decoration-none text-secondary ps-0 mb-3 small d-inline-flex align-items-center gap-1">
+            <i class="bi bi-arrow-left"></i> Retour au Tableau de Bord
+        </a>
+
+        <div class="chat-window-card" id="chatWorkspaceCard" data-expediteur-id="{{ expediteur_id }}" data-destinataire-id="{{ destinataire.id }}">
+            
+            <aside class="chat-sidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">Discussions</h2>
+                </div>
+                <div class="conversations-list" id="sidebarConversationsList">
+                    {% if conversations and conversations|length &gt; 0 %}
+                        {% for conv in conversations %}
+                        <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;messagerie.chat&#39;,%20destinataire_id=conv.interlocuteur_id)%20%7D%7D" class="conversation-item{% if conv.interlocuteur_id == destinataire.id %} active{% endif %}" data-interlocuteur-id="{{ conv.interlocuteur_id }}">
+                            {% if conv.photo_profil %}
+                            <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20conv.photo_profil)%20%7D%7D" alt="" class="sidebar-avatar">
+                            {% else %}
+                            <div class="sidebar-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold" style="font-size:0.85rem;">
+                                {{ conv.nom_interlocuteur[0] | upper }}
+                            </div>
+                            {% endif %}
+                            <div class="conv-meta">
+                                <div class="conv-name">{{ conv.nom_interlocuteur }}</div>
+                                <div class="conv-preview">{{ conv.dernier_message[:60] }}{% if conv.dernier_message|length &gt; 60 %}…{% endif %}</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4 text-muted small px-3">
+                            <i class="bi bi-chat-left-text d-block mb-2" style="font-size:1.5rem;"></i>
+                            Aucune conversation pour le moment.
+                            <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;matching.faire_le_matching&#39;)%20%7D%7D" class="d-block mt-2">Trouver des mentors</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </aside>
+
+            <main class="chat-main-area">
+                <header class="active-chat-header">
+                    <div class="header-user-info">
+                        {% if destinataire.photo_profil %}
+                            <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20destinataire.photo_profil)%20%7D%7D" alt="Photo de {{ destinataire.prenom }}" class="active-avatar">
+                        {% else %}
+                            <div class="active-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold">
+                                {{ destinataire.prenom[0] | upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="fw-bold text-dark mb-0">{{ destinataire.prenom }} {{ destinataire.nom }}</div>
+                            <div class="small text-muted d-flex align-items-center gap-1">
+                                <span class="active-status-dot"></span>
+                                {{ destinataire.filiere if destinataire.filiere else 'Étudiant IFRI' }}
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="chat-body-stream" id="chatBodyStream">
+                    {% if messages and messages|length &gt; 0 %}
+                        {% set current_day = namespace(value='') %}
+                        {% for msg in messages %}
+                            {% set day_stamp = msg.date_envoi.strftime('%d/%m/%Y') %}
+                            {% if day_stamp != current_day.value %}
+                                {% set current_day.value = day_stamp %}
+                                <div class="date-divider">{{ day_stamp }}</div>
+                            {% endif %}
+                            <div class="msg-row {% if msg.expediteur_id == expediteur_id %}sent{% else %}received{% endif %}" data-message-id="{{ msg.id }}">
+                                {% if msg.expediteur_id != expediteur_id %}
+                                    {% if msg.photo_expediteur %}
+                                        <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20msg.photo_expediteur)%20%7D%7D" class="msg-mini-avatar" alt="">
+                                    {% else %}
+                                        <div class="msg-mini-avatar d-flex align-items-center justify-content-center bg-secondary text-white small fw-bold" style="font-size:0.7rem;">
+                                            {{ msg.nom_expediteur[0] | upper }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="msg-bubble">
+                                    {{ msg.contenu }}
+                                    <span class="msg-timestamp">{{ msg.date_envoi.strftime('%H:%M') }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-stream-state">
+                            <div class="empty-stream-icon">💬</div>
+                            <h4 class="text-dark fw-semibold">Début de votre histoire</h4>
+                            <p class="small text-muted">Envoyez un premier message amical pour démarrer l'échange de mentorat.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <footer class="chat-interactive-footer">
+                    <div class="chat-input-wrapper">
+                        <textarea class="rich-textarea" id="chatMessageInput" rows="1" maxlength="2000" placeholder="Écrire votre message pour {{ destinataire.prenom }}..." required=""></textarea>
+                        <button type="button" class="btn-send-message" id="btnSendMessage" title="Envoyer (Entrée)">
+                            <i class="bi bi-send-fill" style="font-size: 0.95rem;"></i>
+                        </button>
+                    </div>
+                    <div class="meta-indicators">
+                        <span class="text-muted">Entrée pour envoyer, Maj+Entrée pour passer à la ligne</span>
+                        <span id="charCounter">2000 caractères restants</span>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;js/chat.js&#39;)%20%7D%7D"></script>
+{% endblock %}</body></html>
