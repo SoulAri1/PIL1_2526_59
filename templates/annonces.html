@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Annonces - IFRI MentorLink{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="fw-bold mb-4">📢 Annonces de mentorat</h1>
+            <p class="text-muted mb-4">Consultez les offres et demandes publiées par la communauté</p>
+        </div>
+    </div>
+
+    <!-- Formulaire de publication -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Publier une annonce</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('annonces_module.publier') }}">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Type d'annonce</label>
+                        <select name="type_annonce" class="form-select" required>
+                            <option value="OFFRE">📤 Offre de mentorat (je propose mon aide)</option>
+                            <option value="DEMANDE">📥 Demande de mentorat (je cherche de l'aide)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Format</label>
+                        <select name="format_mentorat" class="form-select" required>
+                            <option value="PRESENTIEL">🏫 Présentiel</option>
+                            <option value="EN_LIGNE">💻 En ligne</option>
+                            <option value="LES_DEUX">🔄 Les deux</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Matières concernées</label>
+                        <select name="matieres" class="form-select" multiple size="3" required>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="SQL">SQL</option>
+                            <option value="Algorithmique">Algorithmique</option>
+                            <option value="Machine Learning">Machine Learning</option>
+                            <option value="Cybersécurité">Cybersécurité</option>
+                            <option value="React">React</option>
+                            <option value="Docker">Docker</option>
+                            <option value="Git">Git</option>
+                        </select>
+                        <small class="text-muted">Maintenez Ctrl (Cmd) pour sélectionner plusieurs matières</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary-premium px-4">Publier l'annonce</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Offres -->
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-3"><i class="bi bi-megaphone text-success me-2"></i>Offres de mentorat</h3>
+            {% if offres %}
+                {% for offre in offres %}
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1">{{ offre.prenom }} {{ offre.nom }}</h5>
+                                <p class="small text-muted mb-2">{{ offre.filiere }}</p>
+                                <div class="mb-2">
+                                    {% for matiere in offre.matieres %}
+                                        <span class="badge bg-primary me-1">{{ matiere }}</span>
+                                    {% endfor %}
+                                </div>
+                                <span class="badge bg-info">{{ offre.format_mentorat }}</span>
+                                <small class="text-muted ms-2">Publié le {{ offre.date_publication.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#repondreModal{{ offre.id }}">Répondre</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Répondre -->
+                <div class="modal fade" id="repondreModal{{ offre.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Répondre à {{ offre.prenom }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="POST" action="{{ url_for('annonces_module.repondre', annonce_id=offre.id) }}">
+                                <div class="modal-body">
+                                    <textarea name="message_perso" class="form-control" rows="3" placeholder="Votre message..."></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">Aucune offre pour le moment.</p>
+            {% endif %}
+        </div>
+
+        <!-- Demandes -->
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-3"><i class="bi bi-question-circle text-warning me-2"></i>Demandes de mentorat</h3>
+            {% if demandes %}
+                {% for demande in demandes %}
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1">{{ demande.prenom }} {{ demande.nom }}</h5>
+                                <p class="small text-muted mb-2">{{ demande.filiere }}</p>
+                                <div class="mb-2">
+                                    {% for matiere in demande.matieres %}
+                                        <span class="badge bg-warning me-1">{{ matiere }}</span>
+                                    {% endfor %}
+                                </div>
+                                <span class="badge bg-info">{{ demande.format_mentorat }}</span>
+                                <small class="text-muted ms-2">Publié le {{ demande.date_publication.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#repondreModalDem{{ demande.id }}">Répondre</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Répondre -->
+                <div class="modal fade" id="repondreModalDem{{ demande.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Répondre à {{ demande.prenom }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="POST" action="{{ url_for('annonces_module.repondre', annonce_id=demande.id) }}">
+                                <div class="modal-body">
+                                    <textarea name="message_perso" class="form-control" rows="3" placeholder="Votre message..."></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">Aucune demande pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Mes annonces -->
+    {% if mes_annonces %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-3"><i class="bi bi-person me-2"></i>Mes annonces</h3>
+            {% for annonce in mes_annonces %}
+            <div class="card shadow-sm mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge {% if annonce.type_annonce == 'OFFRE' %}bg-success{% else %}bg-warning{% endif %} me-2">
+                            {{ annonce.type_annonce }}
+                        </span>
+                        <span class="small">{{ annonce.matieres | join(', ') }}</span>
+                        <span class="badge bg-secondary ms-2">{{ annonce.format_mentorat }}</span>
+                        <span class="badge {% if annonce.statut == 'ACTIF' %}bg-success{% else %}bg-secondary{% endif %} ms-2">
+                            {{ annonce.statut }}
+                        </span>
+                    </div>
+                    <form method="POST" action="{{ url_for('annonces_module.supprimer', annonce_id=annonce.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cette annonce ?')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -4,10 +4,10 @@ import urllib.parse
 import time
 
 def get_db_connection(max_retries=2, timeout=10):
-    raw_password = "Groupe59@ifri"
-    safe_password = urllib.parse.quote_plus(raw_password)
+    raw_password = "#AZERTY1234#123"
+    safe_password = urllib.parse.quote_plus(raw_password)   
     
-    SUPABASE_URL = f"postgresql://postgres.sgsxtkrrsddomjhlehjj:{safe_password}@aws-0-eu-west-3.pooler.supabase.com:6543/postgres"
+    SUPABASE_URL = f"postgresql://postgres.rptdkboacucrzotrzqvo:{safe_password}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
     
     for attempt in range(max_retries + 1):
         try:

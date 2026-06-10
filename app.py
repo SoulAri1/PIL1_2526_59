@@ -1,23 +1,29 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
-from flask_socketio import SocketIO, emit, join_room
+from flask_socketio import SocketIO, join_room
 
 from modules.auth import auth_bp
 from modules.profil import profil_bp
 from modules.matching import matching_bp, annonces_bp
 from modules.messagerie import messagerie_bp
 from modules.dashboard import dashboard_bp
+from modules.annonces import annonces_bp as annonces_module_bp
 
 app = Flask(__name__)
-app.secret_key = "mentorlink_ifri_2026"
+app.secret_key = "mentorlink_ifri_2026"   # ← BIEN ÉCRIRE secret_key
+
+# Configuration pour l'upload de fichiers
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 
 socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25)
 
+# Enregistrement des blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(profil_bp)
 app.register_blueprint(matching_bp)
 app.register_blueprint(annonces_bp)
 app.register_blueprint(messagerie_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(annonces_module_bp)
 
 @app.context_processor
 def inject_current_user():
