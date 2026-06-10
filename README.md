@@ -48,7 +48,7 @@
 | 4 | **DJIKPESSE Théoson Moralèce Mawutin** | GL | Base de données |
 | 5 | **HOUNHOWAKOU Prince Freddy** | IA | Design UI / UX |
 | 6 | **KPOMALEGNI Josias Précieux Bidossessi** | SI | Algorithme de matching |
-| 7 | **AIZAN Yves Lauriano** | SE&IoT | Messagerie initiale |
+| 7 | **AIZAN Joanès Lauriano** | SE&IoT | Messagerie initiale |
 
 > 📦 **Dépôt GitHub :** [https://github.com/SoulAri1/PIL1_2526_59.git](https://github.com/SoulAri1/PIL1_2526_59.git)
 
