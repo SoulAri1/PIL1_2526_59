@@ -1,4 +1,3 @@
-Voici le `README.md` **très beau, professionnel et complet** pour ton projet :
 
 ```markdown
 # 🌟 IFRI MentorLink
