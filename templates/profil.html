@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if lecture_seule %}Profil — {{ profil.prenom }} {{ profil.nom }}{% else %}IFRI MentorLink - Mon Profil{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 reveal">
+            <div class="card form-profile-card border-0">
+                <div class="card-header-gradient text-white text-center py-5 px-4">
+                    <div class="header-icon-circle mb-3">
+                        <i class="bi bi-person-badge-fill fs-3 text-white"></i>
+                    </div>
+                    {% if lecture_seule %}
+                    <h2 class="h3 fw-bold mb-1 tracking-tight">Profil de {{ profil.prenom }} {{ profil.nom }}</h2>
+                    <p class="small text-white-70 mb-0">Consultation en lecture seule</p>
+                    {% else %}
+                    <h2 class="h3 fw-bold mb-1 tracking-tight">Mon Profil</h2>
+                    <p class="small text-white-70 mb-0">Complétez vos informations pour optimiser le matching</p>
+                    {% endif %}
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    {% if lecture_seule %}
+                    <div class="mb-4 text-center">
+                        {% if profil.photo_profil %}
+                            <img src="{{ url_for('static', filename='uploads/' + profil.photo_profil) }}" class="rounded-circle mb-3" style="width:100px;height:100px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-placeholder mx-auto mb-3" style="width:80px;height:80px;font-size:1.5rem;">
+                                {{ profil.prenom[0] }}{{ profil.nom[0] }}
+                            </div>
+                        {% endif %}
+                        <h4 class="fw-bold">{{ profil.prenom }} {{ profil.nom }}</h4>
+                        <p class="text-muted">{{ profil.filiere or 'Filière non renseignée' }}</p>
+                        {% if profil.bio %}
+                            <p class="small">{{ profil.bio }}</p>
+                        {% endif %}
+                        {% if profil.centres_interet %}
+                            <p class="small text-muted"><i class="bi bi-star me-1"></i>Centres d'intérêt : {{ profil.centres_interet }}</p>
+                        {% endif %}
+                    </div>
+                    {% if profil.competences %}
+                    <h6 class="fw-bold text-success"><i class="bi bi-patch-check me-1"></i>Compétences</h6>
+                    <div class="mb-4">
+                        {% for c in profil.competences %}
+                        <span class="badge bg-success-subtle text-success me-1 mb-1">{{ c }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if profil.lacunes %}
+                    <h6 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Lacunes</h6>
+                    <div class="mb-4">
+                        {% for l in profil.lacunes %}
+                        <span class="badge bg-danger-subtle text-danger me-1 mb-1">{{ l }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('matching.faire_le_matching') }}" class="btn btn-primary-premium py-3 fw-bold">
+                            <i class="bi bi-arrow-left me-2"></i>Retour au matching
+                        </a>
+                    </div>
+                    {% else %}
+                    
+                    <form action="{{ url_for('profil.valider_profil') }}" method="POST" enctype="multipart/form-data" class="needs-validation">
+
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control custom-input" required value="{{ profil.nom if profil else '' }}">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Prénom</label>
+                            <input type="text" name="prenom" class="form-control custom-input" required value="{{ profil.prenom if profil else '' }}">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Filière d'études</label>
+                            <select name="filiere" class="form-select custom-select" required>
+                                <option value="" disabled {% if not profil or not profil.filiere %}selected{% endif %}>Choisissez votre filière...</option>
+                                <option value="Licence Intelligence Artificielle(IA)" {% if profil and profil.filiere == 'Licence Intelligence Artificielle(IA)' %}selected{% endif %}>Licence Intelligence Artificielle (IA)</option>
+                                <option value="Licence Génie Logiciel(GL)" {% if profil and profil.filiere == 'Licence Génie Logiciel(GL)' %}selected{% endif %}>Licence Génie Logiciel (GL)</option>
+                                <option value="Licence Sécurité Informatique(SI)" {% if profil and profil.filiere == 'Licence Sécurité Informatique(SI)' %}selected{% endif %}>Licence Sécurité Informatique (SI)</option>
+                                <option value="Licence Système Embarqués & IoT" {% if profil and profil.filiere == 'Licence Système Embarqués & Internet des Objets (SEiOT)' %}selected{% endif %}>Licence Système Embarqués & IoT</option>
+                                <option value="Licence Internet et Multimédia" {% if profil and profil.filiere == 'Licence Internet et Multimédia (IM)' %}selected{% endif %}>Licence Internet et Multimédia (IM)</option>
+                            </select>
+                        </div>
+
+                        <!-- NOUVEAU : Bio -->
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Bio (courte présentation)</label>
+                            <textarea name="bio" class="form-control custom-input" rows="3" placeholder="Parlez-nous un peu de vous...">{{ profil.bio if profil else '' }}</textarea>
+                        </div>
+
+                        <!-- NOUVEAU : Centres d'intérêt -->
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Centres d'intérêt académiques</label>
+                            <input type="text" name="centres_interet" class="form-control custom-input" placeholder="Ex: IA, Cybersécurité, Développement web" value="{{ profil.centres_interet if profil else '' }}">
+                        </div>
+
+                        <!-- NOUVEAU : Upload photo de profil -->
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Photo de profil</label>
+                            <input type="file" name="photo_profil" class="form-control custom-input" accept="image/*">
+                            {% if profil and profil.photo_profil %}
+                                <div class="mt-2">
+                                    <img src="{{ url_for('static', filename='uploads/' + profil.photo_profil) }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+                                    <small class="text-muted d-block">Laissez vide pour conserver l'image actuelle</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <hr class="my-5 opacity-25">
+
+                        <!-- SECTION COMPÉTENCES -->
+                        <div class="mb-5 competences-section">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge bg-success-subtle text-success rounded p-1.5"><i class="bi bi-patch-check-fill"></i></span>
+                                <h3 class="h6 fw-bold text-dark-smooth mb-0">Compétences acquises</h3>
+                            </div>
+                            <p class="text-muted small mb-3">Cochez les matières technologiques que vous maîtrisez bien :</p>
+                            <div class="d-flex flex-column gap-2.5 custom-checkbox-group p-4">
+                                {% set competences_list = [
+                                    'Python', 'Java', 'JavaScript', 'HTML/CSS', 'SQL', 'NoSQL',
+                                    'Algorithmique', 'Structures de données', 'Génie logiciel', 'UML', 'Design patterns',
+                                    'React', 'Node.js', 'Django', 'Flask', 'Spring Boot',
+                                    'Machine Learning', 'Deep Learning', 'Cybersécurité', 'Docker', 'Git', 'REST API'
+                                ] %}
+                                {% for matiere in competences_list %}
+                                <div class="form-check custom-checkbox-wrapper">
+                                    <input class="form-check-input custom-checkbox" type="checkbox" name="competences" value="{{ matiere }}" id="comp_{{ loop.index }}"
+                                           {% if profil and matiere in profil.competences %}checked{% endif %}>
+                                    <label class="form-check-label fw-medium text-dark-smooth ms-2" for="comp_{{ loop.index }}">{{ matiere }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- SECTION LACUNES -->
+                        <div class="mb-5 lacunes-section">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge bg-danger-subtle text-danger rounded p-1.5"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                                <h3 class="h6 fw-bold text-dark-smooth mb-0">Matières à renforcer</h3>
+                            </div>
+                            <p class="text-muted small mb-3">Cochez les matières où vous avez besoin du soutien d'un mentor :</p>
+                            <div class="d-flex flex-column gap-2.5 custom-checkbox-group p-4">
+                                {% for matiere in competences_list %}
+                                <div class="form-check custom-checkbox-wrapper-danger">
+                                    <input class="form-check-input custom-checkbox checkbox-danger" type="checkbox" name="lacunes" value="{{ matiere }}" id="lac_{{ loop.index }}"
+                                           {% if profil and matiere in profil.lacunes %}checked{% endif %}>
+                                    <label class="form-check-label fw-medium text-dark-smooth ms-2" for="lac_{{ loop.index }}">{{ matiere }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- AJOUT DYNAMIQUE DE MATIÈRE -->
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Ajouter une matière personnalisée</label>
+                            <div class="input-group">
+                                <input type="text" id="customMatiere" class="form-control custom-input" placeholder="Ex: Kotlin, Swift, Rust...">
+                                <button type="button" id="btnAddMatiere" class="btn btn-primary-premium">Ajouter</button>
+                            </div>
+                            <small class="text-muted">La matière sera ajoutée aux compétences ET aux lacunes.</small>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-primary-premium py-3 fw-bold shadow">
+                                Enregistrer le profil <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/profil.js') }}"></script>
+{% endblock %}

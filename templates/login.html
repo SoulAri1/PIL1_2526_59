@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - IFRI MentorLink{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center g-5">
+        <div class="col-lg-5 d-none d-lg-block reveal">
+            <div class="auth-side-panel p-5 text-white h-100">
+                <div class="auth-side-icon mb-4">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <h2 class="fw-bold mb-3">Bienvenue</h2>
+                <p class="text-white-50 mb-4">Connectez-vous pour accéder à votre espace mentorat, suivre vos binômes et échanger avec la communauté IFRI.</p>
+                <ul class="list-unstyled auth-feature-list">
+                    <li><i class="bi bi-check-circle-fill me-2"></i>Accès au tableau de bord</li>
+                    <li><i class="bi bi-check-circle-fill me-2"></i>Gestion de votre profil</li>
+                    <li><i class="bi bi-check-circle-fill me-2"></i>Matching intelligent</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-5 reveal reveal-delay-1">
+            <div class="card form-profile-card border-0">
+                <div class="card-header-gradient text-white text-center py-4 px-4">
+                    <div class="header-icon-circle mb-3">
+                        <i class="bi bi-box-arrow-in-right fs-3 text-white"></i>
+                    </div>
+                    <h2 class="h3 fw-bold mb-1 tracking-tight">Connexion</h2>
+                    <p class="small text-white-70 mb-0">Accédez à votre espace IFRI MentorLink</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    {% if erreur %}
+                    <div class="alert alert-danger-custom mb-4" role="alert">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>{{ erreur }}
+                    </div>
+                    {% endif %}
+
+                    {% if success %}
+                    <div class="alert alert-success-custom mb-4" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>{{ success }}
+                    </div>
+                    {% endif %}
+
+                    <form action="{{ url_for('auth.login') }}" method="POST">
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Adresse email</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-envelope input-icon"></i>
+                                <input type="email" name="email" class="form-control custom-input ps-5" placeholder="exemple@ifri-uac.bj" required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label custom-form-label">Mot de passe</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-lock input-icon"></i>
+                                <input type="password" name="mot_de_passe" class="form-control custom-input ps-5" placeholder="Votre mot de passe" required>
+                            </div>
+                        </div>
+
+                        <!-- Ajout du lien "Mot de passe oublié" -->
+                        <div class="text-end mb-4">
+                            <a href="{{ url_for('auth.forgot_password') }}" class="small text-muted text-decoration-none">
+                                <i class="bi bi-question-circle me-1"></i>Mot de passe oublié ?
+                            </a>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary-premium py-3 fw-bold shadow">
+                                Se connecter <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="text-center text-muted small mb-0">
+                        Pas encore de compte ?
+                        <a href="{{ url_for('auth.register') }}" class="auth-link fw-semibold">Créer un compte</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

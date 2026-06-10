@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - IFRI MentorLink{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 reveal">
+            <div class="card form-profile-card border-0">
+                <div class="card-header-gradient text-white text-center py-4 px-4">
+                    <div class="header-icon-circle mb-3">
+                        <i class="bi bi-person-plus-fill fs-3 text-white"></i>
+                    </div>
+                    <h2 class="h3 fw-bold mb-1 tracking-tight">Créer un compte</h2>
+                    <p class="small text-white-70 mb-0">Rejoignez la communauté MentorLink de l'IFRI</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    {% if erreur %}
+                    <div class="alert alert-danger-custom mb-4" role="alert">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>{{ erreur }}
+                    </div>
+                    {% endif %}
+
+                    <form action="{{ url_for('auth.register') }}" method="POST">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label custom-form-label">Nom</label>
+                                <input type="text" name="nom" class="form-control custom-input" placeholder="Ex: AGOSSOU" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label custom-form-label">Prénom</label>
+                                <input type="text" name="prenom" class="form-control custom-input" placeholder="Ex: Ariel" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label custom-form-label">Adresse email</label>
+                                <input type="email" name="email" class="form-control custom-input" placeholder="exemple@ifri-uac.bj" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label custom-form-label">Téléphone</label>
+                                <input type="tel" name="telephone" class="form-control custom-input" placeholder="Ex: +229 97 00 00 00" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label custom-form-label">Mot de passe</label>
+                                <input type="password" name="mot_de_passe" class="form-control custom-input" placeholder="Créez un mot de passe sécurisé" required minlength="6">
+                                <small class="text-muted">Minimum 6 caractères</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label custom-form-label">Confirmer le mot de passe</label>
+                                <input type="password" name="confirm_password" class="form-control custom-input" placeholder="Répétez votre mot de passe" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label custom-form-label">Filière</label>
+                                <select name="filiere" class="form-select custom-select" required>
+                                    <option value="">Choisissez votre filière...</option>
+                                    <option value="Licence Intelligence Artificielle(IA)">Licence Intelligence Artificielle (IA)</option>
+                                    <option value="Licence Génie Logiciel(GL)">Licence Génie Logiciel (GL)</option>
+                                    <option value="Licence Sécurité Informatique(SI)">Licence Sécurité Informatique (SI)</option>
+                                    <option value="Licence Système Embarqués & Internet des Objets (SEiOT)">Licence Système Embarqués & IoT</option>
+                                    <option value="Licence Internet et Multimédia (IM)">Licence Internet et Multimédia (IM)</option>
+                                </select>
+                            </div>
+                            
+                            <!-- COMPÉTENCES (Points forts) à l'inscription -->
+                            <div class="col-12">
+                                <hr class="my-3">
+                                <label class="form-label fw-bold">Compétences acquises (points forts)</label>
+                                <p class="text-muted small mb-2">Cochez les matières que vous maîtrisez :</p>
+                                <div class="row">
+                                    {% set matieres_list = [
+                                        'Python', 'Java', 'JavaScript', 'HTML/CSS', 'SQL', 'Algorithmique',
+                                        'React', 'Node.js', 'Machine Learning', 'Cybersécurité', 'Docker', 'Git'
+                                    ] %}
+                                    {% for matiere in matieres_list %}
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="competences" value="{{ matiere }}" id="comp_{{ loop.index }}">
+                                            <label class="form-check-label small" for="comp_{{ loop.index }}">{{ matiere }}</label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- LACUNES (Points faibles) à l'inscription -->
+                            <div class="col-12">
+                                <hr class="my-3">
+                                <label class="form-label fw-bold">Matières à renforcer (lacunes)</label>
+                                <p class="text-muted small mb-2">Cochez les matières où vous avez besoin d'aide :</p>
+                                <div class="row">
+                                    {% for matiere in matieres_list %}
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="lacunes" value="{{ matiere }}" id="lac_{{ loop.index }}">
+                                            <label class="form-check-label small" for="lac_{{ loop.index }}">{{ matiere }}</label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-primary-premium py-3 fw-bold shadow">
+                                S'inscrire <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="text-center text-muted small mt-4 mb-0">
+                        Déjà inscrit ?
+                        <a href="{{ url_for('auth.login') }}" class="auth-link fw-semibold">Se connecter</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

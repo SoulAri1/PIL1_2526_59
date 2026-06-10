@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<!-- =========================================================================
+     base.html — Template parent (layout) de toute l'application.
+     ========================================================================= -->
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IFRI MentorLink - {% block title %}IFRI MentorLink{% endblock %}</title>
+
+
+
+    <!-- Favicon : icône affichée dans l'onglet du navigateur -->
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/IFRI MentorLink2.png') }}">
+
+
+
+    <!-- Polices Google + Bootstrap 5 + Bootstrap Icons + notre charte CSS -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_head %}{% endblock %}
+
+</head>
+
+<body class="{% block body_class %}bg-light{% endblock %}">
+
+
+
+    {% block preloader %}
+
+    <!-- Écran de chargement animé au premier affichage (masqué par main.js) -->
+
+    <div class="preloader" id="preloader">
+
+        <div class="loader-content">
+
+            <div class="loader-logo">
+
+                <img src="{{ url_for('static', filename='img/IFRI MentorLink.png') }}" alt="IFRI MentorLink">
+
+            </div>
+
+            <div class="loader-title">IFRI MentorLink</div>
+
+            <div class="loader-spinner"></div>
+
+            <div class="loader-progress">
+
+                <div class="loader-progress-bar"></div>
+
+            </div>
+
+            <div class="loader-text">Préparation de votre espace d'excellence...</div>
+
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+
+
+    <div class="main-content {% block main_content_class %}{% endblock %}">
+
+        {% block navbar %}
+
+        <!-- Barre de navigation sticky — liens générés dynamiquement via url_for() -->
+
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar" id="mainNavbar">
+
+            <div class="container">
+
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+
+                    <img src="{{ url_for('static', filename='img/IFRI MentorLink.png') }}" alt="Logo IFRI MentorLink" class="logo-img">
+
+                    <span class="brand-text">IFRI <span class="text-accent">MentorLink</span></span>
+
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Menu">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+                    <ul class="navbar-nav align-items-center gap-1">
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}" data-nav="accueil">Accueil</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}#fonctionnement" data-nav="fonctionnement">Comment ça marche</a></li>
+
+                        {% if current_user %}
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('matching.faire_le_matching') }}" data-nav="matching"><i class="bi bi-people-fill me-1"></i>Matching</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('messagerie.liste_conversations') }}" data-nav="messagerie"><i class="bi bi-chat-dots me-1"></i>Messages</a></li>
+
+                        <li class="nav-item ms-lg-2">
+
+                           <a class="nav-link text-white-50 small" href="{{ url_for('profil.accueil') }}">
+
+                               <i class="bi bi-person-circle me-1"></i>{{ current_user.prenom }}
+
+                           </a>
+
+                        </li>
+
+                        <li class="nav-item ms-lg-2"><a class="nav-link nav-dashboard-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a></li>
+
+                        <li class="nav-item ms-lg-2">
+
+                            <a class="btn btn-outline-light btn-sm px-3 py-2" href="{{ url_for('auth.logout') }}">Déconnexion</a>
+
+                        </li>
+
+                        {% else %}
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}" data-nav="inscription">S'inscrire</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}#a-propos" data-nav="a-propos">À propos</a></li>
+
+                        <li class="nav-item ms-lg-2"><a class="nav-link nav-dashboard-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a></li>
+
+                        <li class="nav-item ms-lg-3">
+
+                            <a class="btn btn-action-navbar btn-sm px-4 py-2" href="{{ url_for('auth.login') }}">Se connecter</a>
+
+                        </li>
+
+                        {% endif %}
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+        {% endblock %}
+
+
+
+        <!-- Messages flash globaux (succès, erreur, avertissement) -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+          {% if messages %}
+
+          <div class="container mt-3">
+
+            {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }} alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+
+              {{ message }}
+
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+
+            </div>
+
+            {% endfor %}
+
+          </div>
+
+          {% endif %}
+
+        {% endwith %}
+
+
+
+        {% block content %}
+
+        {% endblock %}
+
+
+
+        {% block footer %}
+
+        <footer class="custom-footer text-white text-center py-5 mt-5">
+
+            <div class="container d-flex flex-column align-items-center">
+
+                <!-- Logo footer : image existante du projet (conservée) -->
+
+                <img src="{{ url_for('static', filename='img/logo_ifri-removebg-preview.png') }}" alt="Logo IFRI" class="footer-logo mb-4">
+
+                <p class="mb-1 fw-semibold">© 2026 IFRI MentorLink — Projet universitaire d'intégration pour la réussite</p>
+
+                <small class="text-white-50">Tous droits réservés. Institut de Formation et de Recherche en Informatique.</small>
+
+            </div>
+
+        </footer>
+
+        {% endblock %}
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+
+</body>
+
+</html>
+
+

@@ -1,0 +1,491 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if mode == 'mentore' %}Trouver un Mentor{% elif mode == 'mentor' %}Trouver un Mentoré{% else %}Matching{% endif %}
+  — IFRI MentorLink
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  :root {
+    --ml-navy:      #0F172A;
+    --ml-navy-lt:   #1E293B;
+    --ml-teal:      #0D9488;
+    --ml-teal-light: #14B8A6;
+    --ml-slate:     #64748B;
+    --ml-border:    #E2E8F0;
+    --ml-bg-soft:   #F8FAFC;
+    --ml-radius:    20px;
+    --ml-radius-sm: 12px;
+  }
+
+  /* Hero section */
+  .match-hero {
+    background: linear-gradient(135deg, var(--ml-navy) 0%, #1E3A5F 50%, var(--ml-teal) 100%);
+    padding: 3rem 0 4rem;
+    position: relative;
+  }
+  .match-hero .hero-eyebrow {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: #5EEAD4;
+  }
+  .match-hero h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    color: #fff;
+  }
+  .match-hero h1 .accent-word { color: #5EEAD4; }
+  .match-hero .hero-sub { color: rgba(255,255,255,.7); font-size: .85rem; }
+
+  /* Mode toggle */
+  .mode-toggle-wrapper { display: flex; justify-content: flex-end; }
+  .mode-toggle {
+    display: inline-flex;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 60px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .mode-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 60px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .mode-option i { font-size: 1rem; }
+  .mode-option:hover { color: white; background: rgba(255,255,255,0.1); }
+  .mode-option.active {
+    background: var(--ml-teal);
+    color: white;
+    box-shadow: 0 4px 12px rgba(13,148,136,0.4);
+  }
+  @media (max-width: 768px) {
+    .mode-toggle-wrapper { justify-content: center; margin-top: 1rem; }
+    .mode-option { padding: 6px 16px; font-size: 0.7rem; }
+  }
+
+  /* Cards professionnelles */
+  .match-card {
+    background: #fff;
+    border-radius: var(--ml-radius);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .match-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+
+  /* Topbar colorée selon compatibilité */
+  .card-topbar { height: 6px; width: 100%; }
+  .topbar-high { background: linear-gradient(90deg, #10B981, #34D399); }
+  .topbar-medium { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
+  .topbar-low { background: linear-gradient(90deg, #EF4444, #F87171); }
+
+  .match-card__body { padding: 1.5rem; flex: 1; }
+  .match-card__footer {
+    padding: 1rem 1.5rem;
+    background: var(--ml-bg-soft);
+    border-top: 1px solid var(--ml-border);
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Avatar */
+  .avatar-professional {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #667EEA, #764BA2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .avatar-professional img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+  }
+
+  /* Pourcentage circle */
+  .percentage-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    position: relative;
+  }
+  .percentage-circle span { font-size: 0.55rem; font-weight: 600; margin-top: 2px; }
+  .perc-high { background: #DCFCE7; color: #15803D; border: 3px solid #86EFAC; }
+  .perc-medium { background: #FEF9C3; color: #92400E; border: 3px solid #FDE047; }
+  .perc-low { background: #FEE2E2; color: #991B1B; border: 3px solid #FCA5A5; }
+
+  /* Infos */
+  .candidate-name { font-size: 1rem; font-weight: 700; color: #0F172A; }
+  .candidate-filiere { font-size: 0.7rem; color: var(--ml-slate); margin-top: 2px; }
+  .badge-matiere {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 30px;
+    background: #EEF2FF;
+    color: #4338CA;
+    margin: 3px 4px 3px 0;
+  }
+  .badge-creneau {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    border-radius: 30px;
+    background: #CCFBF1;
+    color: #0F766E;
+    margin: 2px 3px 2px 0;
+  }
+  .bio-text {
+    font-size: 0.75rem;
+    color: var(--ml-slate);
+    line-height: 1.5;
+    margin-top: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Boutons */
+  .btn-contact {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 40px;
+    background: var(--ml-navy);
+    color: white;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-contact:hover { background: var(--ml-teal); transform: translateY(-1px); }
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--ml-border);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .btn-icon:hover { background: var(--ml-bg-soft); transform: translateY(-2px); }
+
+  /* Modal custom */
+  .custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .custom-modal.show { display: flex; }
+  .custom-modal-dialog { max-width: 450px; width: 90%; }
+  .custom-modal-content {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+  }
+  .custom-modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .custom-modal-body { padding: 1.5rem; }
+  .custom-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .custom-modal textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 16px;
+    resize: vertical;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .custom-modal textarea:focus {
+    outline: none;
+    border-color: var(--ml-teal);
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+  }
+
+  /* Empty state */
+  .empty-box { text-align: center; padding: 4rem 2rem; }
+  .empty-icon { font-size: 4rem; opacity: 0.2; margin-bottom: 1rem; }
+
+  @media (max-width: 575px) {
+    .match-card__footer { flex-direction: column; }
+    .btn-contact, .btn-icon { width: 100%; }
+    .match-hero { padding: 2rem 0; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="match-hero">
+  <div class="container">
+    <div class="row align-items-center gy-3">
+      <div class="col-lg-8">
+        <p class="hero-eyebrow mb-1">
+          <i class="bi bi-stars me-1"></i>
+          {% if mode == 'mentore' %}Recherche de mentors{% elif mode == 'mentor' %}Recherche de mentorés{% endif %}
+        </p>
+        <h1 class="mb-1">
+          {% if mode == 'mentore' %}
+            Trouvez votre <span class="accent-word">mentor idéal</span>
+          {% else %}
+            Accompagnez un <span class="accent-word">mentoré</span>
+          {% endif %}
+        </h1>
+        <p class="hero-sub mb-0">
+          {% if mode == 'mentore' %}
+            Suggestions basées sur vos lacunes, filière et disponibilités
+          {% else %}
+            Étudiants ayant besoin de vos compétences
+          {% endif %}
+        </p>
+      </div>
+      {% if peut_etre_mentore and peut_etre_mentor %}
+      <div class="col-lg-4">
+        <div class="mode-toggle-wrapper">
+          <div class="mode-toggle">
+            <a href="{{ url_for('matching.faire_le_matching', mode='mentore') }}" class="mode-option {% if mode == 'mentore' %}active{% endif %}">
+              <i class="bi bi-search-heart"></i> <span>Trouver un mentor</span>
+            </a>
+            <a href="{{ url_for('matching.faire_le_matching', mode='mentor') }}" class="mode-option {% if mode == 'mentor' %}active{% endif %}">
+              <i class="bi bi-person-raised-hand"></i> <span>Trouver un mentoré</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="match-body" style="padding: 2rem 0 5rem;">
+  <div class="container">
+
+    {% if erreur == 'db_error' %}
+    <div class="empty-box"><i class="bi bi-cloud-slash empty-icon"></i><h4>Service indisponible</h4><a href="{{ url_for('matching.faire_le_matching') }}" class="btn btn-primary">Réessayer</a></div>
+    {% elif erreur == 'profil_incomplet' %}
+    <div class="empty-box"><i class="bi bi-person-gear empty-icon"></i><h4>Profil incomplet</h4><a href="{{ url_for('profil.mon_profil') }}" class="btn btn-primary">Compléter mon profil</a></div>
+    {% else %}
+
+    {% if resultats %}
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+      <p class="text-muted small mb-0"><strong>{{ resultats|length }}</strong> profil{{ 's' if resultats|length > 1 else '' }} trouvé{{ 's' if resultats|length > 1 else '' }}</p>
+      <span class="badge bg-light border rounded-pill px-3 py-1 small"><i class="bi bi-percent me-1"></i>Compatibilité décroissante</span>
+    </div>
+
+    <div class="row g-4">
+      {% for candidat in resultats %}
+      <div class="col-md-6 col-lg-4">
+        <div class="match-card">
+          <div class="card-topbar 
+            {% if candidat.compatibilite >= 70 %}topbar-high
+            {% elif candidat.compatibilite >= 40 %}topbar-medium
+            {% else %}topbar-low{% endif %}">
+          </div>
+          <div class="match-card__body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div class="d-flex gap-3">
+                <div class="avatar-professional">
+                  {% if candidat.photo_profil %}
+                    <img src="{{ url_for('static', filename='uploads/' + candidat.photo_profil) }}" alt="Photo">
+                  {% else %}
+                    {{ (candidat.prenom[0] ~ candidat.nom[0]) | upper }}
+                  {% endif %}
+                </div>
+                <div>
+                  <div class="candidate-name">{{ candidat.prenom }} {{ candidat.nom }}</div>
+                  <div class="candidate-filiere"><i class="bi bi-mortarboard me-1"></i>{{ candidat.filiere|truncate(30) or 'Filière non renseignée' }}</div>
+                </div>
+              </div>
+              <div class="percentage-circle 
+                {% if candidat.compatibilite >= 70 %}perc-high
+                {% elif candidat.compatibilite >= 40 %}perc-medium
+                {% else %}perc-low{% endif %}">
+                {{ candidat.compatibilite }}<span>%</span>
+              </div>
+            </div>
+
+            {% if candidat.matieres_communes %}
+            <div class="mb-2">
+              <div class="small text-uppercase fw-bold text-muted mb-1" style="font-size: 0.6rem;">Matières communes</div>
+              <div>
+                {% for mat in candidat.matieres_communes[:3] %}
+                  <span class="badge-matiere">{{ mat.nom|truncate(18) }}</span>
+                {% endfor %}
+                {% if candidat.matieres_communes|length > 3 %}
+                  <span class="badge-matiere">+{{ candidat.matieres_communes|length - 3 }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+
+            {% if candidat.creneaux_communs %}
+            <div class="mb-2">
+              <div class="small text-uppercase fw-bold text-muted mb-1" style="font-size: 0.6rem;">Disponibilités communes</div>
+              <div>
+                {% for creneau in candidat.creneaux_communs[:2] %}
+                  <span class="badge-creneau">{{ creneau|title|truncate(15) }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            {% if candidat.bio %}
+            <p class="bio-text">{{ candidat.bio|truncate(80) }}</p>
+            {% endif %}
+          </div>
+          <div class="match-card__footer">
+            <button class="btn-contact" onclick="openModal('{{ candidat.id }}', '{{ candidat.prenom }} {{ candidat.nom }}', {{ candidat.compatibilite }})">
+              <i class="bi bi-envelope-paper me-1"></i> Contacter
+            </button>
+            <a href="{{ url_for('profil.voir_profil', user_id=candidat.id) }}" class="btn-icon" title="Voir profil">
+              <i class="bi bi-person"></i>
+            </a>
+            <a href="{{ url_for('messagerie.chat', destinataire_id=candidat.id) }}" class="btn-icon" title="Message">
+              <i class="bi bi-chat"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-box">
+      <i class="bi bi-people empty-icon"></i>
+      <h4>Aucun profil trouvé</h4>
+      <p class="text-muted small">Aucun profil ne correspond à vos critères pour le moment.</p>
+      <a href="{{ url_for('profil.mon_profil') }}" class="btn btn-primary rounded-pill px-4">Mettre à jour mon profil</a>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- Modal custom -->
+<div id="contactModal" class="custom-modal" onclick="if(event.target === this) closeModal()">
+  <div class="custom-modal-dialog">
+    <div class="custom-modal-content">
+      <div class="custom-modal-header">
+        <h5 class="fw-bold" id="modalTitle">Demande de mentorat</h5>
+        <button type="button" class="btn-close" onclick="closeModal()"></button>
+      </div>
+      <form id="contactForm" method="POST" action="">
+        <div class="custom-modal-body">
+          <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded-3">
+            <div class="avatar-professional" id="modalAvatar" style="width:45px;height:45px;font-size:0.9rem;">WB</div>
+            <div>
+              <div class="fw-semibold" id="modalName">Loading...</div>
+              <div class="small text-muted" id="modalCompat">Compatibilité : --%</div>
+            </div>
+          </div>
+          <label class="form-label fw-semibold mb-2">Message (optionnel)</label>
+          <textarea name="message_perso" class="form-control" rows="3" maxlength="500" placeholder="Présentez-vous et expliquez votre démarche..."></textarea>
+          <div class="text-end mt-2 text-muted small">500 caractères max.</div>
+        </div>
+        <div class="custom-modal-footer">
+          <button type="button" class="btn btn-light rounded-pill px-4" onclick="closeModal()">Annuler</button>
+          <button type="submit" class="btn rounded-pill px-4 fw-semibold text-white" style="background: #0F172A;">
+            <i class="bi bi-send me-1"></i>Envoyer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function openModal(userId, userName, compatibilite) {
+    var modal = document.getElementById('contactModal');
+    var form = document.getElementById('contactForm');
+    var modalName = document.getElementById('modalName');
+    var modalCompat = document.getElementById('modalCompat');
+    var modalAvatar = document.getElementById('modalAvatar');
+    
+    form.action = "/matching/contacter/" + userId;
+    modalName.textContent = userName;
+    modalCompat.textContent = "Compatibilité : " + compatibilite + "%";
+    
+    var initiales = userName.split(' ').map(function(n) { return n[0]; }).join('').toUpperCase();
+    modalAvatar.textContent = initiales;
+    
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    setTimeout(function() {
+        var ta = modal.querySelector('textarea');
+        if (ta) ta.focus();
+    }, 100);
+}
+
+function closeModal() {
+    var modal = document.getElementById('contactModal');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    document.getElementById('contactForm').reset();
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
+</script>
+{% endblock %}
