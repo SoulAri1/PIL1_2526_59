@@ -3,7 +3,7 @@
 # 🌟 IFRI MentorLink
 
 <p align="center">
-  <img src="static/img/IFRI MentorLink.png" alt="Logo IFRI MentorLink" width="150px"/>
+  <img src="static/img/IFRI MentorLink - .png" alt="Logo IFRI MentorLink" width="150px"/>
 </p>
 
 <h3 align="center">Plateforme d'entraide académique</h3>
