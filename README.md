@@ -331,4 +331,3 @@ Ariel/README.md
 
 ---
 
-**Remplace ton `README.md` par ce code. C'est beau, propre et professionnel !** 🚀
