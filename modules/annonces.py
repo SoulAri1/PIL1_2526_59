@@ -4,6 +4,7 @@ from modules.auth import login_required
 
 annonces_bp = Blueprint('annonces_module', __name__, url_prefix='/annonces')
 
+
 @annonces_bp.route('/')
 @login_required
 def index():
@@ -13,49 +14,47 @@ def index():
     
     offres = []
     demandes = []
+    mes_annonces = []
     
     if conn:
         cur = conn.cursor()
         try:
-            # Récupérer les offres actives
+            # Récupérer les annonces actives des autres utilisateurs
             cur.execute("""
-                SELECT a.id, a.type_annonce, a.format_mentorat, a.date_publication, a.statut,
+                SELECT a.id, a.type_annonce, a.format_mentorat, a.date_publication, a.statut, a.disponibilites,
                        u.id as utilisateur_id, u.nom, u.prenom, u.filiere, u.photo_profil,
-                       array_agg(m.nom_matiere) as matieres
+                       COALESCE(array_agg(m.nom_matiere) FILTER (WHERE m.nom_matiere IS NOT NULL), '{}') as matieres
                 FROM annonces a
                 JOIN utilisateurs u ON a.utilisateur_id = u.id
                 LEFT JOIN annonces_matieres am ON a.id = am.annonce_id
                 LEFT JOIN matieres m ON am.matiere_id = m.id
-                WHERE a.statut = 'ACTIF'
-                GROUP BY a.id, u.id, u.nom, u.prenom, u.filiere, u.photo_profil
+                WHERE a.statut = 'ACTIF' AND a.utilisateur_id != %s
+                GROUP BY a.id, u.id, u.nom, u.prenom, u.filiere, u.photo_profil, a.date_publication
                 ORDER BY a.date_publication DESC
-            """)
+            """, (user_id,))
             all_annonces = cur.fetchall()
             
-            offres = [a for a in all_annonces if a['type_annonce'] == 'OFFRE' and a['utilisateur_id'] != user_id]
-            demandes = [a for a in all_annonces if a['type_annonce'] == 'DEMANDE' and a['utilisateur_id'] != user_id]
+            offres = [a for a in all_annonces if a['type_annonce'] == 'OFFRE']
+            demandes = [a for a in all_annonces if a['type_annonce'] == 'DEMANDE']
             
             # Mes annonces
             cur.execute("""
-                SELECT a.id, a.type_annonce, a.format_mentorat, a.date_publication, a.statut,
-                       array_agg(m.nom_matiere) as matieres
+                SELECT a.id, a.type_annonce, a.format_mentorat, a.date_publication, a.statut, a.disponibilites,
+                       COALESCE(array_agg(m.nom_matiere) FILTER (WHERE m.nom_matiere IS NOT NULL), '{}') as matieres
                 FROM annonces a
                 LEFT JOIN annonces_matieres am ON a.id = am.annonce_id
                 LEFT JOIN matieres m ON am.matiere_id = m.id
                 WHERE a.utilisateur_id = %s
-                GROUP BY a.id
+                GROUP BY a.id, a.date_publication
                 ORDER BY a.date_publication DESC
             """, (user_id,))
             mes_annonces = cur.fetchall()
             
         except Exception as e:
             print(f"[ANNONCES] Erreur: {e}")
-            offres, demandes, mes_annonces = [], [], []
         finally:
             cur.close()
             conn.close()
-    else:
-        offres, demandes, mes_annonces = [], [], []
     
     return render_template('annonces.html', offres=offres, demandes=demandes, mes_annonces=mes_annonces)
 
@@ -67,10 +66,11 @@ def publier():
     user_id = session['user_id']
     type_annonce = request.form.get('type_annonce')
     format_mentorat = request.form.get('format_mentorat')
+    disponibilites = request.form.get('disponibilites', '').strip()
     matieres = request.form.getlist('matieres')
     
     if not type_annonce or not format_mentorat or not matieres:
-        flash('Veuillez remplir tous les champs.', 'danger')
+        flash('Veuillez remplir tous les champs obligatoires.', 'danger')
         return redirect(url_for('annonces_module.index'))
     
     conn = get_db_connection()
@@ -82,9 +82,9 @@ def publier():
     try:
         # Insérer l'annonce
         cur.execute("""
-            INSERT INTO annonces (utilisateur_id, type_annonce, format_mentorat, statut)
-            VALUES (%s, %s, %s, 'ACTIF') RETURNING id
-        """, (user_id, type_annonce, format_mentorat))
+            INSERT INTO annonces (utilisateur_id, type_annonce, format_mentorat, disponibilites, statut)
+            VALUES (%s, %s, %s, %s, 'ACTIF') RETURNING id
+        """, (user_id, type_annonce, format_mentorat, disponibilites))
         annonce_id = cur.fetchone()['id']
         
         # Lier les matières
@@ -94,6 +94,7 @@ def publier():
             if matiere:
                 cur.execute("""
                     INSERT INTO annonces_matieres (annonce_id, matiere_id) VALUES (%s, %s)
+                    ON CONFLICT DO NOTHING
                 """, (annonce_id, matiere['id']))
         
         conn.commit()
