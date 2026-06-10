@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">Matières concernées</label>
-                        <select name="matieres" class="form-select" multiple size="3" required>
+                        <select name="matieres" class="form-select" multiple size="4" required>
                             <option value="Python">Python</option>
                             <option value="JavaScript">JavaScript</option>
                             <option value="SQL">SQL</option>
@@ -46,8 +46,19 @@
                             <option value="React">React</option>
                             <option value="Docker">Docker</option>
                             <option value="Git">Git</option>
+                            <option value="HTML/CSS">HTML/CSS</option>
+                            <option value="Django">Django</option>
+                            <option value="Flask">Flask</option>
                         </select>
                         <small class="text-muted">Maintenez Ctrl (Cmd) pour sélectionner plusieurs matières</small>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">📅 Disponibilités horaires</label>
+                        <input type="text" name="disponibilites" class="form-control" 
+                               placeholder="Ex: Lundi 14h-16h, Mercredi 10h-12h">
+                        <small class="text-muted">Indiquez vos créneaux disponibles pour le mentorat</small>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary-premium px-4">Publier l'annonce</button>
@@ -73,7 +84,24 @@
                                     {% endfor %}
                                 </div>
                                 <span class="badge bg-info">{{ offre.format_mentorat }}</span>
-                                <small class="text-muted ms-2">Publié le {{ offre.date_publication.strftime('%d/%m/%Y') }}</small>
+                                
+                                <!-- Date et heure de publication -->
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Publiée le : {{ offre.date_publication.strftime('%d/%m/%Y à %H:%M') }}
+                                    </small>
+                                </div>
+                                
+                                <!-- Disponibilités -->
+                                {% if offre.disponibilites %}
+                                <div class="mt-1">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar-week me-1"></i>
+                                        Disponibilités : {{ offre.disponibilites }}
+                                    </small>
+                                </div>
+                                {% endif %}
                             </div>
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#repondreModal{{ offre.id }}">Répondre</button>
                         </div>
@@ -102,7 +130,10 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <p class="text-muted">Aucune offre pour le moment.</p>
+                <div class="alert alert-light text-center py-4">
+                    <i class="bi bi-megaphone fs-1 text-muted"></i>
+                    <p class="mt-2 mb-0">Aucune offre pour le moment.</p>
+                </div>
             {% endif %}
         </div>
 
@@ -123,7 +154,24 @@
                                     {% endfor %}
                                 </div>
                                 <span class="badge bg-info">{{ demande.format_mentorat }}</span>
-                                <small class="text-muted ms-2">Publié le {{ demande.date_publication.strftime('%d/%m/%Y') }}</small>
+                                
+                                <!-- Date et heure de publication -->
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Publiée le : {{ demande.date_publication.strftime('%d/%m/%Y à %H:%M') }}
+                                    </small>
+                                </div>
+                                
+                                <!-- Disponibilités -->
+                                {% if demande.disponibilites %}
+                                <div class="mt-1">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar-week me-1"></i>
+                                        Disponibilités : {{ demande.disponibilites }}
+                                    </small>
+                                </div>
+                                {% endif %}
                             </div>
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#repondreModalDem{{ demande.id }}">Répondre</button>
                         </div>
@@ -152,7 +200,10 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <p class="text-muted">Aucune demande pour le moment.</p>
+                <div class="alert alert-light text-center py-4">
+                    <i class="bi bi-question-circle fs-1 text-muted"></i>
+                    <p class="mt-2 mb-0">Aucune demande pour le moment.</p>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -174,6 +225,16 @@
                         <span class="badge {% if annonce.statut == 'ACTIF' %}bg-success{% else %}bg-secondary{% endif %} ms-2">
                             {{ annonce.statut }}
                         </span>
+                        <!-- Heure précise pour mes annonces -->
+                        <small class="text-muted ms-2">
+                            <i class="bi bi-clock"></i> {{ annonce.date_publication.strftime('%d/%m/%Y %H:%M') }}
+                        </small>
+                        <!-- Disponibilités dans mes annonces -->
+                        {% if annonce.disponibilites %}
+                        <small class="text-muted ms-2">
+                            <i class="bi bi-calendar-week"></i> {{ annonce.disponibilites }}
+                        </small>
+                        {% endif %}
                     </div>
                     <form method="POST" action="{{ url_for('annonces_module.supprimer', annonce_id=annonce.id) }}" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cette annonce ?')">
@@ -187,4 +248,20 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Nettoyage des modals pour éviter les blocages
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('hidden.bs.modal', function() {
+            document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+                backdrop.remove();
+            });
+            document.body.classList.remove('modal-open');
+        });
+    });
+});
+</script>
 {% endblock %}
