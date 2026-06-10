@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0173)file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/chat.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>{% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Messagerie — {{ destinataire.prenom }} {{ destinataire.nom }} — IFRI MentorLink{% endblock %}
 
@@ -350,7 +348,7 @@
 
 <div class="chat-workspace">
     <div class="container">
-        <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;dashboard.dashboard&#39;)%20%7D%7D" class="btn btn-link text-decoration-none text-secondary ps-0 mb-3 small d-inline-flex align-items-center gap-1">
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link text-decoration-none text-secondary ps-0 mb-3 small d-inline-flex align-items-center gap-1">
             <i class="bi bi-arrow-left"></i> Retour au Tableau de Bord
         </a>
 
@@ -361,11 +359,12 @@
                     <h2 class="sidebar-title">Discussions</h2>
                 </div>
                 <div class="conversations-list" id="sidebarConversationsList">
-                    {% if conversations and conversations|length &gt; 0 %}
+                    {% if conversations and conversations|length > 0 %}
                         {% for conv in conversations %}
-                        <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;messagerie.chat&#39;,%20destinataire_id=conv.interlocuteur_id)%20%7D%7D" class="conversation-item{% if conv.interlocuteur_id == destinataire.id %} active{% endif %}" data-interlocuteur-id="{{ conv.interlocuteur_id }}">
+                        <a href="{{ url_for('messagerie.chat', destinataire_id=conv.interlocuteur_id) }}"
+                           class="conversation-item{% if conv.interlocuteur_id == destinataire.id %} active{% endif %}" data-interlocuteur-id="{{ conv.interlocuteur_id }}">
                             {% if conv.photo_profil %}
-                            <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20conv.photo_profil)%20%7D%7D" alt="" class="sidebar-avatar">
+                            <img src="{{ url_for('static', filename='uploads/' + conv.photo_profil) }}" alt="" class="sidebar-avatar">
                             {% else %}
                             <div class="sidebar-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold" style="font-size:0.85rem;">
                                 {{ conv.nom_interlocuteur[0] | upper }}
@@ -373,7 +372,7 @@
                             {% endif %}
                             <div class="conv-meta">
                                 <div class="conv-name">{{ conv.nom_interlocuteur }}</div>
-                                <div class="conv-preview">{{ conv.dernier_message[:60] }}{% if conv.dernier_message|length &gt; 60 %}…{% endif %}</div>
+                                <div class="conv-preview">{{ conv.dernier_message[:60] }}{% if conv.dernier_message|length > 60 %}…{% endif %}</div>
                             </div>
                         </a>
                         {% endfor %}
@@ -381,7 +380,7 @@
                         <div class="text-center py-4 text-muted small px-3">
                             <i class="bi bi-chat-left-text d-block mb-2" style="font-size:1.5rem;"></i>
                             Aucune conversation pour le moment.
-                            <a href="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;matching.faire_le_matching&#39;)%20%7D%7D" class="d-block mt-2">Trouver des mentors</a>
+                            <a href="{{ url_for('matching.faire_le_matching') }}" class="d-block mt-2">Trouver des mentors</a>
                         </div>
                     {% endif %}
                 </div>
@@ -391,7 +390,7 @@
                 <header class="active-chat-header">
                     <div class="header-user-info">
                         {% if destinataire.photo_profil %}
-                            <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20destinataire.photo_profil)%20%7D%7D" alt="Photo de {{ destinataire.prenom }}" class="active-avatar">
+                            <img src="{{ url_for('static', filename='uploads/' + destinataire.photo_profil) }}" alt="Photo de {{ destinataire.prenom }}" class="active-avatar">
                         {% else %}
                             <div class="active-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold">
                                 {{ destinataire.prenom[0] | upper }}
@@ -408,7 +407,7 @@
                 </header>
 
                 <div class="chat-body-stream" id="chatBodyStream">
-                    {% if messages and messages|length &gt; 0 %}
+                    {% if messages and messages|length > 0 %}
                         {% set current_day = namespace(value='') %}
                         {% for msg in messages %}
                             {% set day_stamp = msg.date_envoi.strftime('%d/%m/%Y') %}
@@ -419,7 +418,7 @@
                             <div class="msg-row {% if msg.expediteur_id == expediteur_id %}sent{% else %}received{% endif %}" data-message-id="{{ msg.id }}">
                                 {% if msg.expediteur_id != expediteur_id %}
                                     {% if msg.photo_expediteur %}
-                                        <img src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;uploads/&#39;%20+%20msg.photo_expediteur)%20%7D%7D" class="msg-mini-avatar" alt="">
+                                        <img src="{{ url_for('static', filename='uploads/' + msg.photo_expediteur) }}" class="msg-mini-avatar" alt="">
                                     {% else %}
                                         <div class="msg-mini-avatar d-flex align-items-center justify-content-center bg-secondary text-white small fw-bold" style="font-size:0.7rem;">
                                             {{ msg.nom_expediteur[0] | upper }}
@@ -443,7 +442,7 @@
 
                 <footer class="chat-interactive-footer">
                     <div class="chat-input-wrapper">
-                        <textarea class="rich-textarea" id="chatMessageInput" rows="1" maxlength="2000" placeholder="Écrire votre message pour {{ destinataire.prenom }}..." required=""></textarea>
+                        <textarea class="rich-textarea" id="chatMessageInput" rows="1" maxlength="2000" placeholder="Écrire votre message pour {{ destinataire.prenom }}..." required></textarea>
                         <button type="button" class="btn-send-message" id="btnSendMessage" title="Envoyer (Entrée)">
                             <i class="bi bi-send-fill" style="font-size: 0.95rem;"></i>
                         </button>
@@ -460,5 +459,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="file:///C:/Users/myg26/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/978A325173A186B4C31D39C2691FBA57C93AC996/transfers/2026-24/%7B%7B%20url_for(&#39;static&#39;,%20filename=&#39;js/chat.js&#39;)%20%7D%7D"></script>
-{% endblock %}</body></html>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
