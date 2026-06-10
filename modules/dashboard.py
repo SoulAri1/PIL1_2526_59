@@ -4,14 +4,15 @@ IFRI MentorLink - Module Dashboard (Adapté au Schema PostgreSQL)
 Développé dans le dossier modules/
 """
 
-from flask import Blueprint, render_template, session, redirect
-# Importation de la passerelle de connexion créée par le Membre 4
+from flask import Blueprint, render_template
 from database.connection import get_db_connection
+from modules.auth import login_required
 
 # Création du Blueprint pour le dashboard
 dashboard_bp = Blueprint('dashboard', __name__)
 
 @dashboard_bp.route('/dashboard')
+@login_required
 def dashboard():
     # 1. VOS DONNÉES FICTIVES DE BASE (Sécurité et démo)
     stats_plateforme = {
@@ -75,13 +76,13 @@ def dashboard():
                 recents_suivis = vrais_suivis + recents_suivis
 
         except Exception as e:
-            print(f"⚠️ Erreur lors de l'exécution des requêtes SQL : {e}")
-            print("Affichage des données fictives par défaut.")
+            print(f"[DB] Erreur lors de l'execution des requetes SQL : {e}")
+            print("[DB] Affichage des donnees fictives par defaut.")
         finally:
             cur.close()
             conn.close()
     else:
-        print("🔌 Base PostgreSQL inaccessible. Mode données fictives activé.")
+        print("[DB] Base PostgreSQL inaccessible. Mode donnees fictives active.")
 
     # Renvoi des données unifiées au template HTML
     return render_template('dashboard.html', stats=stats_plateforme, suivis=recents_suivis)
