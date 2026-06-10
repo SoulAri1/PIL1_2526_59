@@ -251,19 +251,6 @@ Le score de compatibilité est calculé sur **100 points** :
 
 Ce projet a été réalisé par le **Groupe 59** dans le cadre du cours **Projet Intégrateur** (PIL1) à l'IFRI.
 
-### Encadrement pédagogique
-
-- **Superviseur :** M. Ratheil HOUNDJI
-- **Encadrants :** M. Armand ACCROMBESSI, Mme Maryse GAHOU
-
-### Accès GitHub pour les encadrants
-
-Les comptes suivants ont été ajoutés comme collaborateurs :
-- `ratheilesse`
-- `primearwyn`
-- `MaryseGAHOU`
-
----
 
 ## 📝 État du projet
 
@@ -289,10 +276,8 @@ Ce projet est réalisé dans un cadre pédagogique à l'**Institut de Formation 
 
 ## 🙏 Remerciements
 
-Nous remercions chaleureusement nos encadrants pour leur accompagnement et leurs conseils précieux tout au long de ce projet.
-
 <p align="center">
-  <i>« Seul on va plus vite, ensemble on va plus loin. »</i> — Proverbe africain
+  <i>« Seul on va plus vite, ensemble on va plus loin.🍀 »</i> — Proverbe africain
 </p>
 
 ---
@@ -301,16 +286,6 @@ Nous remercions chaleureusement nos encadrants pour leur accompagnement et leurs
   <b>© 2025-2026 IFRI MentorLink — Groupe 59 — Projet réalisé en 7 jours</b>
 </p>
 ```
-
----
-
-## 📁 Emplacement
-
-```
-Ariel/README.md
-```
-
----
 
 ## ✅ Ce que contient ce README
 
